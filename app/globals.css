@@ -20,8 +20,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-html,body,body > div, main,:root {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://static.vecteezy.com/system/resources/previews/002/617/764/non_2x/world-binary-circuit-board-future-technology-blue-hud-cyber-security-concept-background-free-vector.jpg');
+html,
+body,
+body > div,
+main,
+:root {
+  /*background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://static.vecteezy.com/system/resources/previews/002/617/764/non_2x/world-binary-circuit-board-future-technology-blue-hud-cyber-security-concept-background-free-vector.jpg");*/
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;
