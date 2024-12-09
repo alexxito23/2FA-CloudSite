@@ -28,7 +28,7 @@ const User = () => {
         </span>
 
         <span className="flex items-center gap-2 font-medium text-dark dark:text-dark-6"></span>
-        <span className="hidden lg:block">Jhon Smith</span>
+        <span className="hidden lg:block dark:text-dark-6">Jhon Smith</span>
       </Link>
     </ClickOutside>
   );

@@ -14,7 +14,7 @@ export default function DashLayout({ children }: LayoutProps) {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <h1>{children}</h1>
+        {children}
       </div>
     </div>
   );
