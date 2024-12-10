@@ -78,7 +78,7 @@ const DropdownNotification = () => {
 
         {dropdownOpen && (
           <div
-            className={`z-50 absolute flex h-[550px] w-75 flex-col rounded-xl border-[0.5px] border-stroke bg-white px-5.5 pb-5.5 pt-5 shadow-default dark:border-dark-3 dark:bg-gray-dark sm:right-0 sm:w-[364px]`}
+            className={` absolute flex h-[550px] w-75 flex-col rounded-xl border-[0.5px] border-stroke bg-white px-5.5 pb-5.5 pt-5 shadow-default dark:border-dark-3 dark:bg-gray-dark sm:right-0 sm:w-[364px]`}
           >
             <div className="mb-5 flex items-center justify-between">
               <h5 className="text-lg font-medium text-dark dark:text-white">

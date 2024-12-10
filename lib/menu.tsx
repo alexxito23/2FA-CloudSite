@@ -69,7 +69,7 @@ export const menuGroups = [
               />
             </svg>
           ),
-          label: "Calendar",
+          label: "Compartido Conmigo",
           route: "?type=calendar",
         },
         {
@@ -96,7 +96,7 @@ export const menuGroups = [
               />
             </svg>
           ),
-          label: "Profile",
+          label: "Mi Unidad",
           route: "/profile",
         },
       ],
