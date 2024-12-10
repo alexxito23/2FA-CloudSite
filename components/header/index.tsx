@@ -4,7 +4,6 @@ import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownNotification from "./DropdownNotification";
 import User from "./User";
 import Image from "next/image";
-import logo from "../../icons/logo.svg"
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -30,7 +29,7 @@ const Header = (props: {
             <Image
               width={32}
               height={32}
-              src={logo}
+              src={"/logo.svg"}
               alt="Logo"
             />
           </Link>
@@ -39,9 +38,9 @@ const Header = (props: {
         <div className="hidden xl:block">
           <div>
             <h1 className="mb-0.5 text-2xl font-bold text-dark dark:text-white">
-              Dashboard
+              Mi Unidad
             </h1>
-            <p className="font-medium dark:text-gray-3">Next.js Admin Dashboard Solution</p>
+            <p className="font-medium dark:text-gray-3">👋 Bienvenido de nuevo Usuario 1</p>
           </div>
         </div>
 

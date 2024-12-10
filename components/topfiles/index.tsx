@@ -22,10 +22,10 @@ const Topfiles = () => {
         },
       ];
     return(
-        <div className="m-5">
-            <h1 className="text-xl font-bold text-dark dark:text-white">
-              Últimos Archivos
-            </h1>
+        <>
+        <h1 className="text-xl font-bold text-dark dark:text-white">
+          Últimos Archivos
+        </h1>
         <div className="grid-cols-6 grid justify-between gap-6 m-4">
             {menuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
@@ -33,7 +33,7 @@ const Topfiles = () => {
               </div>
             ))}
         </div>
-        </div>
+        </>
     )
 }
 

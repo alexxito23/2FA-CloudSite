@@ -9,8 +9,8 @@ export default async function Dashboard({
 }) {
   const { userid } = await params;
   return (
-    <div className="dark:bg-dark-2">
-      <Suspense fallback={<div>Cargando</div>}><div><Topfiles/><FileContent /></div></Suspense>
-    </div>
+    <main className="dark:bg-dark-2 h-full">
+      <Suspense fallback={<div>Cargando</div>}><div className="m-5"><Topfiles/><FileContent /></div></Suspense>
+    </main>
   );
 }

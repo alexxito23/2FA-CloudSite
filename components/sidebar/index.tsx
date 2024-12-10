@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import SidebarItem from "./SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
-import logo from "../../icons/logo.svg"
 import { menuGroups } from "@/lib/menu";
 
 
@@ -34,7 +33,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <Image
               width={176}
               height={32}
-              src={logo}
+              src={"/logo.svg"}
               alt="Logo"
               priority
               style={{ width: "auto", height: "auto" }}
