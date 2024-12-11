@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import SidebarItem from "./SidebarItem";
@@ -15,8 +15,11 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type") || "dashboard";
+  const pathname = usePathname();
+  const lastSegment = pathname.split('/').filter(Boolean).pop() || "";
+  const type = isNaN(parseInt(lastSegment)) ? lastSegment : "#";
+  const match = pathname.match(/^\/user\/(\d+)/);
+  const userid = match ? match[1] : '';
 
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
@@ -76,6 +79,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       key={menuIndex}
                       item={menuItem}
                       pageName={type}
+                      userid={userid}
                     />
                   ))}
                 </ul>

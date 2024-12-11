@@ -2,21 +2,21 @@ const FileContent = () => {
     return(
       <>
       <h1 className="text-xl font-bold text-dark dark:text-white mt-5">Tu unidad</h1>
-    <div className="overflow-auto h-[36rem] mt-4">
+    <div className="overflow-auto h-[36rem] mt-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" className="px-6 py-3">
-                    Product name
+                    Archivo
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Color
+                    Propietario
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Category
+                    Ultima modificación
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Price
+                    Tamaño
                 </th>
             </tr>
         </thead>
