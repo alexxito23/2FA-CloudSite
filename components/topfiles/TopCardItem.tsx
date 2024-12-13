@@ -1,5 +1,3 @@
-import { Card, CardBody, CardHeader, Image } from "@nextui-org/react"
-
 interface FileCard {
     name: string
 }

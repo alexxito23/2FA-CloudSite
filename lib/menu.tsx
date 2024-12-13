@@ -70,7 +70,7 @@ export const menuGroups = [
           </svg>
         ),
         label: "Compartido Conmigo",
-        route: "/profile",
+        route: "/compartido",
       },
       {
         icon: (
@@ -97,7 +97,7 @@ export const menuGroups = [
           </svg>
         ),
         label: "Mi Unidad",
-        route: "/almacenamiento",
+        route: "/unidad",
       },
     ],
   },
