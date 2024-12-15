@@ -1,20 +1,26 @@
+import { FaFileAlt } from "react-icons/fa";
+
 interface FileCard {
-    name: string
+  name: string;
 }
 
-const Topfilesitem = ({name}: FileCard)  => {
-    return(
-    <div className="flex flex-col shadow-dark-4 overflow-hidden h-auto text-foreground box-border dark:bg-gray-800 outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 shadow-medium rounded-large transition-transform-background motion-reduce:transition-none">
-      <div className="pb-0 pt-2 px-4 flex-col items-start">
-        <p className="text-tiny uppercase font-bold dark:text-white">{name}</p>
-        <small className="text-default-500 -z">12 Tracks</small>
-        <h4 className="font-bold text-large dark:text-white">{name}</h4>
+const Topfilesitem = ({ name }: FileCard) => {
+  return (
+    <div className="box-border flex h-auto items-center overflow-hidden rounded-large p-6 text-foreground shadow-medium shadow-dark-4 outline-none transition-transform-background data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-offset-2 data-[focus-visible=true]:outline-focus motion-reduce:transition-none dark:bg-gray-800">
+      <FaFileAlt color="white" size={36} />
+      <div className="flex flex-1 flex-col items-start px-4 pb-0 pt-2">
+        <h4 className="text-large font-bold dark:text-white">
+          {name}
+        </h4>
+        <small className="-z text-default-500">
+          12 Tracks
+        </small>
       </div>
-      <h2 className="overflow-visible py-2">
-        <span>HOLA</span>
-      </h2>
+      <div className="overflow-visible py-2">
+        <span>COMP</span>
+      </div>
     </div>
-    )
-}
+  );
+};
 
-export default Topfilesitem
+export default Topfilesitem;

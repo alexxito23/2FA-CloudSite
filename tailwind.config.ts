@@ -15,7 +15,7 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         white: "#FFFFFF",
-        primary: "#5750F1",
+        primary: "#0fab94", //5750F1
         stroke: "#E6EBF1",
         "stroke-dark": "#27303E",
         dark: {
@@ -44,8 +44,8 @@ const config: Config = {
         9.5: "2.375rem",
       },
       zIndex: {
-        1: '1',
-      }
+        1: "1",
+      },
     },
   },
   darkMode: "class",

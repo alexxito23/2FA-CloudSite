@@ -38,7 +38,7 @@ const DropdownNotification = () => {
   return (
     <ClickOutside
       onClick={() => setDropdownOpen(false)}
-      className="relative hidden sm:block"
+      className="relative block"
     >
       <li>
         <Link
@@ -78,13 +78,13 @@ const DropdownNotification = () => {
 
         {dropdownOpen && (
           <div
-            className={` absolute flex h-[550px] w-75 flex-col rounded-xl border-[0.5px] border-stroke bg-white px-5.5 pb-5.5 pt-5 shadow-default dark:border-dark-3 dark:bg-gray-dark sm:right-0 sm:w-[364px]`}
+            className={` w-75 absolute flex h-[550px] flex-col rounded-xl border-[0.5px] border-stroke bg-white px-5 pb-5 pt-5 shadow-default dark:border-dark-3 dark:bg-gray-dark sm:w-[364px]`}
           >
             <div className="mb-5 flex items-center justify-between">
               <h5 className="text-lg font-medium text-dark dark:text-white">
                 Notifications
               </h5>
-              <span className="rounded-md bg-primary px-2 py-0.5 text-body-xs font-medium text-white">
+              <span className="text-body-xs rounded-md bg-primary px-2 py-0 font-medium text-white">
                 5 new
               </span>
             </div>
@@ -93,7 +93,7 @@ const DropdownNotification = () => {
               {notificationList.map((item, index) => (
                 <li key={index}>
                   <Link
-                    className="flex items-center gap-4 rounded-[10px] p-2.5 hover:bg-gray-2 dark:hover:bg-dark-3"
+                    className="flex items-center gap-4 rounded-[10px] p-2 hover:bg-gray-2 dark:hover:bg-dark-3"
                     href="#"
                   >
                     <span className="block h-14 w-14 rounded-full">
@@ -113,7 +113,7 @@ const DropdownNotification = () => {
                       <span className="block font-medium text-dark dark:text-white">
                         {item.title}
                       </span>
-                      <span className="block text-body-sm font-medium text-dark-5 dark:text-dark-6">
+                      <span className="text-body-sm block font-medium text-dark-5 dark:text-dark-6">
                         {item.subTitle}
                       </span>
                     </span>
@@ -123,7 +123,7 @@ const DropdownNotification = () => {
             </ul>
 
             <Link
-              className="flex items-center justify-center rounded-[7px] border border-primary p-2.5 font-medium text-primary hover:bg-blue-light-5 dark:border-dark-4 dark:text-dark-6 dark:hover:border-primary dark:hover:bg-blue-light-3 dark:hover:text-primary"
+              className="hover:bg-blue-light-5 dark:hover:bg-blue-light-3 flex items-center justify-center rounded-[7px] border border-primary p-2.5 font-medium text-primary dark:border-dark-4 dark:text-dark-6 dark:hover:border-primary dark:hover:text-primary"
               href="#"
             >
               See all notifications

@@ -8,35 +8,39 @@ import SidebarItem from "./SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import { menuGroups } from "@/lib/menu";
 
-
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({
+  sidebarOpen,
+  setSidebarOpen,
+}: SidebarProps) => {
   const pathname = usePathname();
-  const lastSegment = pathname.split('/').filter(Boolean).pop() || "";
-  const type = isNaN(parseInt(lastSegment)) ? lastSegment : "#";
+  const lastSegment =
+    pathname.split("/").filter(Boolean).pop() || "";
+  const type = isNaN(parseInt(lastSegment))
+    ? lastSegment
+    : "#";
   const match = pathname.match(/^\/user\/(\d+)/);
-  const userid = match ? match[1] : '';
+  const userid = match ? match[1] : "";
 
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`absolute left-0 top-0 z-9999 flex h-screen w-72 flex-col overflow-y-hidden border-r border-stroke bg-white dark:border-stroke-dark dark:bg-gray-dark lg:static lg:translate-x-0 ${
+        className={` absolute left-0 top-0 z-10 flex h-screen w-72 flex-col overflow-y-hidden border-r border-stroke bg-white dark:border-stroke-dark dark:bg-gray-dark lg:static lg:translate-x-0 ${
           sidebarOpen
             ? "translate-x-0 duration-300 ease-linear"
             : "-translate-x-full"
         }`}
       >
-        {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center gap-2 px-6 py-6">
           <Link href="/">
             <Image
-              width={176}
+              width={200}
               height={32}
-              src={"/logo.svg"}
+              src={"/images/logo.png"}
               alt="Logo"
               priority
               style={{ width: "auto", height: "auto" }}
@@ -62,32 +66,41 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </svg>
           </button>
         </div>
-        {/* <!-- SIDEBAR HEADER --> */}
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-          {/* <!-- Sidebar Menu --> */}
           <nav className="mt-1 px-4 lg:px-6">
             {menuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
                 <h3 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
                   {group.name}
                 </h3>
-
                 <ul className="mb-6 flex flex-col gap-2">
-                  {group.menuItems.map((menuItem, menuIndex) => (
-                    <SidebarItem
-                      key={menuIndex}
-                      item={menuItem}
-                      pageName={type}
-                      userid={userid}
-                    />
-                  ))}
+                  {group.menuItems.map(
+                    (menuItem, menuIndex) => (
+                      <SidebarItem
+                        key={menuIndex}
+                        item={menuItem}
+                        pageName={type}
+                        userid={userid}
+                      />
+                    ),
+                  )}
                 </ul>
               </div>
             ))}
           </nav>
-          {/* <!-- Sidebar Menu --> */}
         </div>
+
+        <footer className="absolute bottom-0 m-4">
+          <hr className="my-6 border-gray-200 dark:border-gray-700" />
+          <span className="block text-[0.8rem] text-gray-500 dark:text-gray-400 sm:text-center">
+            © 2025{" "}
+            <Link href={`/user/${userid}`}>
+              CloudBlock™
+            </Link>
+            . All Rights Reserved.
+          </span>
+        </footer>
       </aside>
     </ClickOutside>
   );

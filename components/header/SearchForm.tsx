@@ -4,7 +4,10 @@ const SearchForm = () => {
   return (
     <>
       <li className="hidden lg:block">
-        <form action="https://formbold.com/s/unique_form_id" method="POST">
+        <form
+          action="https://formbold.com/s/unique_form_id"
+          method="POST"
+        >
           <div className="relative w-full max-w-[300px]">
             <button className="absolute left-5 top-1/2 -translate-y-1/2 text-dark hover:text-primary dark:text-dark-6 dark:hover:text-primary">
               <svg
@@ -25,7 +28,11 @@ const SearchForm = () => {
                 </g>
                 <defs>
                   <clipPath id="clip0_1791_1693">
-                    <rect width="18" height="18" fill="white" />
+                    <rect
+                      width="18"
+                      height="18"
+                      fill="white"
+                    />
                   </clipPath>
                 </defs>
               </svg>

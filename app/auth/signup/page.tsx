@@ -1,18 +1,24 @@
 import UserForm from "@/components/auth";
-import SigninForm from "@/components/auth/SigninForm";
+import SignupForm from "@/components/auth/SignupForm";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "Regístrate en CloudBlock",
+  description: "Regístrate en CloudBlock para la máxima seguridad en el cloud",
+};
+
+export default function Signup() {
   return (
-    <main className="flex items-center bg-dark-2">
+    <main className="flex w-full items-center bg-dark-2">
       <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
         <div className="shadow-1 shadow-card h-[50rem] rounded-[10px] bg-gray-dark">
           <div className="flex flex-wrap items-center">
             <div className=" w-full xl:w-1/2">
               <div className="xl:p-15 h-full w-full p-7">
-                <UserForm title="Inicia Sesión">
-                  <SigninForm />
+                <UserForm title="Regístrate">
+                  <SignupForm />
                 </UserForm>
               </div>
             </div>
@@ -28,15 +34,15 @@ export default function Home() {
                   />
                 </Link>
                 <p className="mb-3 text-xl font-medium text-white">
-                  Inicia sesión en tu cuenta
+                  Regístrate en tu cuenta
                 </p>
 
                 <h1 className="sm:text-heading-3 mb-4 text-2xl font-bold text-white">
-                  🔐Bienvenido de Nuevo!
+                  🔐Bienvenido a <i>CloudBlock!</i>
                 </h1>
 
                 <p className="w-full max-w-[375px] font-medium text-dark-6">
-                  Inicie sesión en su cuenta completando los campos necesarios a
+                  Crea una cuenta completando los campos necesarios a
                   continuación
                 </p>
 
