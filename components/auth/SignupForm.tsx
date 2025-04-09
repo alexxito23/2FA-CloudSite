@@ -1,120 +1,146 @@
 "use client";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@nextui-org/react";
-import { MdOutlineEmail, MdDriveFileRenameOutline } from "react-icons/md";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import FormInput from "./FormInput";
+import PasswordInput from "./PasswordInput";
+import { handleRegistration, validateToken } from "../../utils/auth";
+import { validatePassword } from "../../utils/passwordValidation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-import { Input } from "@nextui-org/react";
+interface SignupFormProps {
+  onQrTokenChange: (token: string) => void;
+  appStatus: "idle" | "error" | "loading" | "validate";
+  setAppStatus: (status: "idle" | "error" | "loading" | "validate") => void;
+  setExpiration: (timestamp: number) => void;
+}
 
-export default function SignupForm() {
-  const [isVisible, setIsVisible] = useState(false);
+export default function SignupForm({
+  onQrTokenChange,
+  appStatus,
+  setAppStatus,
+  setExpiration,
+}: SignupFormProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const router: AppRouterInstance = useRouter();
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (name === "password") {
+      const errors = validatePassword(value);
+      setPasswordErrors(errors);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const errors = validatePassword(formData.password);
+    if (errors.length > 0) {
+      errors.forEach((error) => toast.error(error));
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      setAppStatus("loading");
+      const { token, expiration } = await handleRegistration(formData);
+      setExpiration(expiration);
+      onQrTokenChange(token);
+      setAppStatus("validate");
+
+      setTimeout(() => validateToken(token, router, setAppStatus), 1000);
+    } catch (error) {
+      setAppStatus("error");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Error al enviar el formulario",
+      );
+    }
+  };
 
   return (
-    <form action="">
-      <Input
-        classNames={{
-          inputWrapper:
-            "rounded-lg border border-dark-3 bg-dark-2 font-medium text-white group-data-[focus=true]:border-[#50f1d9] focus-visible:shadow-none text-md pl-4",
-          label: "text-md",
-          input: "text-md",
-          base: "mb-4",
-        }}
-        variant="bordered"
-        endContent={<MdDriveFileRenameOutline size={26} color={"#9CA3AF"} />}
+    <form onSubmit={handleSubmit}>
+      <FormInput
         label="Nombre"
-        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleInputChange}
+        disabled={appStatus === "loading" || appStatus === "validate"}
+        icon="name"
       />
-
-      <Input
-        classNames={{
-          inputWrapper:
-            "rounded-lg border border-dark-3 bg-dark-2 font-medium text-white group-data-[focus=true]:border-[#50f1d9] focus-visible:shadow-none text-md pl-4",
-          label: "text-md",
-          input: "text-md",
-          base: "mb-4",
-        }}
-        variant="bordered"
-        endContent={<MdDriveFileRenameOutline size={26} color={"#9CA3AF"} />}
+      <FormInput
         label="Apellidos"
-        type="text"
+        name="lastname"
+        value={formData.lastname}
+        onChange={handleInputChange}
+        disabled={appStatus === "loading" || appStatus === "validate"}
+        icon="name"
       />
-
-      <Input
-        classNames={{
-          inputWrapper:
-            "rounded-lg border border-dark-3 bg-dark-2 font-medium text-white group-data-[focus=true]:border-[#50f1d9] focus-visible:shadow-none text-md pl-4",
-          label: "text-md",
-          input: "text-md",
-          base: "mb-4",
-        }}
-        variant="bordered"
-        endContent={<MdOutlineEmail size={26} color={"#9CA3AF"} />}
+      <FormInput
         label="Email"
+        name="email"
         type="email"
+        value={formData.email}
+        onChange={handleInputChange}
+        disabled={appStatus === "loading" || appStatus === "validate"}
+        icon="email"
       />
-
-      <Input
-        classNames={{
-          inputWrapper:
-            "rounded-lg border border-dark-3 bg-dark-2 font-medium text-white group-data-[focus=true]:border-[#50f1d9] focus-visible:shadow-none text-md pl-4",
-          label: "text-md",
-          input: "text-md",
-          base: "mb-5",
-        }}
-        variant="bordered"
-        endContent={
-          <button
-            aria-label="toggle password visibility"
-            className="focus:outline-none"
-            type="button"
-            onClick={toggleVisibility}
-          >
-            {isVisible ? (
-              <IoMdEyeOff size={26} color={"#9CA3AF"} />
-            ) : (
-              <IoMdEye size={26} color={"#9CA3AF"} />
-            )}
-          </button>
-        }
+      <PasswordInput
         label="Contraseña"
-        type={isVisible ? "text" : "password"}
+        name="password"
+        value={formData.password}
+        onChange={handleInputChange}
+        disabled={appStatus === "loading" || appStatus === "validate"}
       />
-
-      <Input
-        classNames={{
-          inputWrapper:
-            "rounded-lg border border-dark-3 bg-dark-2 font-medium text-white group-data-[focus=true]:border-[#50f1d9] focus-visible:shadow-none text-md pl-4",
-          label: "text-md",
-          input: "text-md",
-          base: "mb-5",
-        }}
-        variant="bordered"
-        endContent={
-          <button
-            aria-label="toggle password visibility"
-            className="focus:outline-none"
-            type="button"
-            onClick={toggleVisibility}
-          >
-            {isVisible ? (
-              <IoMdEyeOff size={26} color={"#9CA3AF"} />
-            ) : (
-              <IoMdEye size={26} color={"#9CA3AF"} />
-            )}
-          </button>
-        }
+      {passwordErrors.length > 0 && (
+        <ul className="mb-2 mt-1 text-sm text-red-500">
+          {passwordErrors.map((error, index) => (
+            <li key={index}>{error}</li>
+          ))}
+        </ul>
+      )}
+      <PasswordInput
         label="Repetir Contraseña"
-        type={isVisible ? "text" : "password"}
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        onChange={handleInputChange}
+        disabled={appStatus === "loading" || appStatus === "validate"}
       />
-
       <div className="mb-4">
         <Button
           type="submit"
           className="text-md flex h-14 w-full rounded-lg bg-primary bg-opacity-50 font-bold uppercase text-white transition hover:bg-opacity-30"
+          isDisabled={
+            appStatus === "loading" ||
+            appStatus === "validate" ||
+            passwordErrors.length > 0
+          }
         >
-          Regístrate
+          {appStatus === "loading"
+            ? "Enviando..."
+            : appStatus === "validate"
+              ? "Enviado"
+              : "Regístrate"}
         </Button>
       </div>
     </form>

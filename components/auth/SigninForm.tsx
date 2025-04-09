@@ -25,6 +25,7 @@ export default function SigninForm() {
         endContent={<MdOutlineEmail size={26} color={"#9CA3AF"} />}
         label="Email"
         type="email"
+        isRequired
       />
 
       <Input
@@ -52,6 +53,7 @@ export default function SigninForm() {
         }
         label="Contraseña"
         type={isVisible ? "text" : "password"}
+        isRequired
       />
 
       <div className="mb-6 flex items-center justify-between gap-2 py-2">

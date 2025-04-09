@@ -1,59 +1,28 @@
-import UserForm from "@/components/auth";
+// pages/home.tsx
+
+"use client";
+import Layout from "@/components/auth";
+//import QRCodeGenerator from "@/components/QRCodeGenerator";
+//import Timer from "@/components/Timer";
 import SigninForm from "@/components/auth/SigninForm";
-import Image from "next/image";
-import Link from "next/link";
+import UserForm from "@/components/auth/UserForm";
 
 export default function Home() {
   return (
-    <main className="flex items-center bg-dark-2">
-      <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-        <div className="shadow-1 shadow-card h-[50rem] rounded-[10px] bg-gray-dark">
-          <div className="flex flex-wrap items-center">
-            <div className=" w-full xl:w-1/2">
-              <div className="xl:p-15 h-full w-full p-7">
-                <UserForm title="Inicia Sesión">
-                  <SigninForm />
-                </UserForm>
-              </div>
-            </div>
-
-            <div className="hidden h-[50rem] w-full p-7 xl:block xl:w-1/2">
-              <div className="custom-gradient-1 h-full overflow-hidden rounded-2xl !bg-dark-2 bg-none px-12 pt-12">
-                <Link className="mb-10 inline-block" href="/">
-                  <Image
-                    src={"/images/logo.png"}
-                    alt="Logo"
-                    width={200}
-                    height={159}
-                  />
-                </Link>
-                <p className="mb-3 text-xl font-medium text-white">
-                  Inicia sesión en tu cuenta
-                </p>
-
-                <h1 className="sm:text-heading-3 mb-4 text-2xl font-bold text-white">
-                  🔐Bienvenido de Nuevo!
-                </h1>
-
-                <p className="w-full max-w-[375px] font-medium text-dark-6">
-                  Inicie sesión en su cuenta completando los campos necesarios a
-                  continuación
-                </p>
-
-                <div className="mt-32">
-                  <Image
-                    src={"/images/grid.svg"}
-                    alt="Logo"
-                    width={405}
-                    height={325}
-                    className="mx-auto dark:opacity-30"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    <Layout
+      title="Bienvenido de Nuevo!"
+      subtitle="Inicia sesión en tu cuenta"
+      appStatus="idle"
+      qrCode={
+        <div className="flex flex-row gap-x-2 font-semibold uppercase text-primary">
+          {/*           <QRCodeGenerator token="8844884" text="register" />
+          <Timer minutes={0} seconds={0} /> */}
         </div>
-      </div>
-    </main>
+      }
+    >
+      <UserForm title="Inicia Sesión">
+        <SigninForm />
+      </UserForm>
+    </Layout>
   );
 }

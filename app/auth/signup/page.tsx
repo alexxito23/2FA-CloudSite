@@ -1,65 +1,81 @@
-import UserForm from "@/components/auth";
+"use client";
+import Layout from "@/components/auth";
+import QRCodeGenerator from "@/components/auth/QRCodeGenerator";
+import { useState } from "react";
 import SignupForm from "@/components/auth/SignupForm";
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import UserForm from "@/components/auth/UserForm";
+import { Button, Link } from "@nextui-org/react";
+import Timer from "@/components/auth/Timer";
+import { Toaster } from "sonner";
 
-export const metadata: Metadata = {
-  title: "Regístrate en CloudBlock",
-  description: "Regístrate en CloudBlock para la máxima seguridad en el cloud",
-};
+// Definir el objeto de los estados
+const APP_STATUS = {
+  IDLE: "idle",
+  ERROR: "error",
+  LOADING: "loading",
+  VALIDATE: "validate",
+} as const;
+
+type AppStatusType = (typeof APP_STATUS)[keyof typeof APP_STATUS];
 
 export default function Signup() {
+  const [qrToken, setQrToken] = useState<string>("");
+  const [expiration, setExpiration] = useState<number>(Date.now());
+  const [appStatus, setAppStatus] = useState<AppStatusType>(APP_STATUS.IDLE);
+  const handleQrTokenChange = (token: string) => {
+    setQrToken(token);
+  };
+
+  const handleAppStatusChange = (status: AppStatusType) => {
+    setAppStatus(status);
+  };
+
+  const handleExpirationTime = (timestamp: number) => {
+    setExpiration(timestamp);
+  };
+
   return (
-    <main className="flex w-full items-center bg-dark-2">
-      <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-        <div className="shadow-1 shadow-card h-[50rem] rounded-[10px] bg-gray-dark">
-          <div className="flex flex-wrap items-center">
-            <div className=" w-full xl:w-1/2">
-              <div className="xl:p-15 h-full w-full p-7">
-                <UserForm title="Regístrate">
-                  <SignupForm />
-                </UserForm>
-              </div>
-            </div>
-
-            <div className="hidden h-[50rem] w-full p-7 xl:block xl:w-1/2">
-              <div className="custom-gradient-1 h-full overflow-hidden rounded-2xl !bg-dark-2 bg-none px-12 pt-12">
-                <Link className="mb-10 inline-block" href="/">
-                  <Image
-                    src={"/images/logo.png"}
-                    alt="Logo"
-                    width={200}
-                    height={159}
-                  />
-                </Link>
-                <p className="mb-3 text-xl font-medium text-white">
-                  Regístrate en tu cuenta
-                </p>
-
-                <h1 className="sm:text-heading-3 mb-4 text-2xl font-bold text-white">
-                  🔐Bienvenido a <i>CloudBlock!</i>
-                </h1>
-
-                <p className="w-full max-w-[375px] font-medium text-dark-6">
-                  Crea una cuenta completando los campos necesarios a
-                  continuación
-                </p>
-
-                <div className="mt-32">
-                  <Image
-                    src={"/images/grid.svg"}
-                    alt="Logo"
-                    width={405}
-                    height={325}
-                    className="mx-auto dark:opacity-30"
-                  />
-                </div>
-              </div>
-            </div>
+    <>
+      <Toaster expand richColors position="top-right" />
+      <Layout
+        title="Bienvenido a CloudBlock!"
+        subtitle="Regístrate en tu cuenta"
+        appStatus={appStatus}
+        qrCode={
+          <div className="flex flex-col items-center justify-center gap-x-2 font-semibold uppercase text-primary">
+            <QRCodeGenerator token={qrToken} text="register">
+              <Timer targetTimestamp={expiration} />
+            </QRCodeGenerator>
           </div>
-        </div>
-      </div>
-    </main>
+        }
+        AppButton={
+          qrToken ? (
+            <div className="flex items-center justify-center gap-4">
+              <Button
+                className="text-md mb-4 flex h-14 w-full rounded-lg bg-primary bg-opacity-40  font-bold uppercase text-white"
+                as={Link}
+                href={`cloudblock://open?token=${qrToken}&type=register`}
+              >
+                Abrir App
+              </Button>
+              <Timer targetTimestamp={expiration} />
+            </div>
+          ) : (
+            <h1 className="flex items-center justify-center font-bold uppercase text-primary">
+              ¡Error al generar el token!
+            </h1>
+          )
+        }
+      >
+        <UserForm title="Regístrate">
+          <SignupForm
+            onQrTokenChange={handleQrTokenChange}
+            appStatus={appStatus}
+            setAppStatus={handleAppStatusChange}
+            setExpiration={handleExpirationTime}
+          />
+        </UserForm>
+      </Layout>
+    </>
   );
 }
