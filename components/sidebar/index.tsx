@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,18 +12,24 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({
-  sidebarOpen,
-  setSidebarOpen,
-}: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
-  const lastSegment =
-    pathname.split("/").filter(Boolean).pop() || "";
-  const type = isNaN(parseInt(lastSegment))
-    ? lastSegment
-    : "#";
-  const match = pathname.match(/^\/user\/(\d+)/);
-  const userid = match ? match[1] : "";
+  const segments = pathname.split("/").filter(Boolean);
+  const lastSegment = segments.length > 2 ? segments[2] : "#";
+  const [cookie, setCookie] = useState("");
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await fetch("/api/auth/session", {
+        credentials: "include",
+      });
+      const data = await response.json();
+      const userCookie = data.cookie.value;
+      setCookie(userCookie);
+    };
+
+    checkAuth();
+  }, []);
 
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
@@ -36,7 +41,7 @@ const Sidebar = ({
         }`}
       >
         <div className="flex items-center gap-2 px-6 py-6">
-          <Link href="/">
+          <Link href={`/user/${cookie}`}>
             <Image
               width={200}
               height={32}
@@ -75,16 +80,14 @@ const Sidebar = ({
                   {group.name}
                 </h3>
                 <ul className="mb-6 flex flex-col gap-2">
-                  {group.menuItems.map(
-                    (menuItem, menuIndex) => (
-                      <SidebarItem
-                        key={menuIndex}
-                        item={menuItem}
-                        pageName={type}
-                        userid={userid}
-                      />
-                    ),
-                  )}
+                  {group.menuItems.map((menuItem, menuIndex) => (
+                    <SidebarItem
+                      key={menuIndex}
+                      item={menuItem}
+                      pageName={lastSegment}
+                      userid={cookie}
+                    />
+                  ))}
                 </ul>
               </div>
             ))}
@@ -94,11 +97,8 @@ const Sidebar = ({
         <footer className="absolute bottom-0 m-4">
           <hr className="my-6 border-gray-200 dark:border-gray-700" />
           <span className="block text-[0.8rem] text-gray-500 dark:text-gray-400 sm:text-center">
-            © 2025{" "}
-            <Link href={`/user/${userid}`}>
-              CloudBlock™
-            </Link>
-            . All Rights Reserved.
+            © 2025 <Link href={`/user/${cookie}`}>CloudBlock™</Link>. All
+            Rights Reserved.
           </span>
         </footer>
       </aside>

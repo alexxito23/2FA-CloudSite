@@ -12,8 +12,10 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 interface SignupFormProps {
   onQrTokenChange: (token: string) => void;
-  appStatus: "idle" | "error" | "loading" | "validate";
-  setAppStatus: (status: "idle" | "error" | "loading" | "validate") => void;
+  appStatus: "idle" | "error" | "loading" | "validate" | "pass";
+  setAppStatus: (
+    status: "idle" | "error" | "loading" | "validate" | "pass",
+  ) => void;
   setExpiration: (timestamp: number) => void;
 }
 
@@ -111,20 +113,24 @@ export default function SignupForm({
         value={formData.password}
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
+        errorMessage={
+          passwordErrors.length > 0 && (
+            <ul>
+              {passwordErrors.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
+            </ul>
+          )
+        }
+        isInvalid={passwordErrors.length > 0}
       />
-      {passwordErrors.length > 0 && (
-        <ul className="mb-2 mt-1 text-sm text-red-500">
-          {passwordErrors.map((error, index) => (
-            <li key={index}>{error}</li>
-          ))}
-        </ul>
-      )}
       <PasswordInput
         label="Repetir Contraseña"
         name="confirmPassword"
         value={formData.confirmPassword}
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
+        isInvalid={passwordErrors.length > 0}
       />
       <div className="mb-4">
         <Button

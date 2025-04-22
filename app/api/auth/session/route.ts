@@ -7,5 +7,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 
-  return NextResponse.json({ authenticated: true }, { status: 200 });
+  return NextResponse.json(
+    { authenticated: true, cookie: authCookie },
+    { status: 200 },
+  );
 }

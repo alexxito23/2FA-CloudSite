@@ -1,6 +1,5 @@
 import { FaChartPie } from "react-icons/fa";
 import {
-  MdDashboard,
   MdFolderShared,
   MdStorage,
   MdOutlineStar,
@@ -12,19 +11,14 @@ export const menuGroups = [
     name: "MENU",
     menuItems: [
       {
-        icon: <MdDashboard size={24} />,
-        label: "Menu",
+        icon: <MdStorage size={24} />,
+        label: "Mi Unidad",
         route: "#",
       },
       {
         icon: <MdFolderShared size={24} />,
         label: "Compartido Conmigo",
         route: "/compartido",
-      },
-      {
-        icon: <MdStorage size={24} />,
-        label: "Mi Unidad",
-        route: "/unidad",
       },
       {
         icon: <MdOutlineStar size={24} />,

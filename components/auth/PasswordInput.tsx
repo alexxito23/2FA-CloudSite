@@ -9,6 +9,8 @@ interface PasswordInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled: boolean;
+  errorMessage?: React.ReactNode;
+  isInvalid?: boolean;
 }
 
 export default function PasswordInput({
@@ -17,6 +19,8 @@ export default function PasswordInput({
   value,
   onChange,
   disabled,
+  errorMessage,
+  isInvalid,
 }: PasswordInputProps) {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -53,6 +57,8 @@ export default function PasswordInput({
       value={value}
       onChange={onChange}
       isDisabled={disabled}
+      errorMessage={errorMessage}
+      isInvalid={isInvalid}
     />
   );
 }

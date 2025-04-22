@@ -6,7 +6,7 @@ interface LayoutProps {
   children: ReactNode;
   title: string;
   subtitle: string;
-  appStatus: "idle" | "error" | "loading" | "validate";
+  appStatus: "idle" | "error" | "loading" | "validate" | "pass";
   qrCode?: JSX.Element;
   AppButton?: JSX.Element;
 }
@@ -17,7 +17,6 @@ const Layout: React.FC<LayoutProps> = ({
   subtitle,
   appStatus,
   qrCode,
-  AppButton,
 }) => {
   const [loading, setLoading] = useState(true);
 
@@ -106,11 +105,6 @@ const Layout: React.FC<LayoutProps> = ({
                     </Skeleton>
                   </div>
                 )}
-              </div>
-            </div>
-            <div className="block w-full p-7 xl:hidden">
-              <div className="flex flex-col items-center justify-center">
-                {appStatus === "validate" && AppButton}
               </div>
             </div>
           </div>

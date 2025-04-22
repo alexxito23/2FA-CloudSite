@@ -1,14 +1,24 @@
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
 import { usePathname } from "next/navigation";
+import { logout } from "@/utils/logout";
 
-const User = () => {
+interface UserProps {
+  nombre: string;
+  apellidos: string;
+  email: string;
+}
+
+const User = ({ nombre, apellidos, email }: UserProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const match = pathname.match(/^\/user\/(\d+)/);
+  const match = pathname.match(/^\/user\/([^/]+)/);
   const userid = match ? match[1] : "";
+
+  const handleLogout = async () => {
+    logout();
+  };
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -17,22 +27,9 @@ const User = () => {
         className="flex items-center gap-4"
         href="#"
       >
-        <span className="h-12 w-12 rounded-full">
-          <Image
-            width={112}
-            height={112}
-            src="/images/user/user-03.png"
-            style={{
-              width: "auto",
-              height: "auto",
-            }}
-            alt="User"
-            className="overflow-hidden rounded-full"
-          />
-        </span>
-
-        <span className="flex items-center gap-2 font-medium text-dark dark:text-dark-6">
-          <span className="hidden lg:block">Jhon Smith</span>
+        <div className="flex items-center gap-2 pl-4 font-medium text-dark dark:text-dark-6">
+          <span className="hidden capitalize lg:block">{nombre ?? "-"}</span>
+          <span className="hidden capitalize lg:block">{apellidos ?? "-"}</span>
 
           <svg
             className={`fill-current duration-200 ease-in ${dropdownOpen && "rotate-180"}`}
@@ -49,7 +46,7 @@ const User = () => {
               fill=""
             />
           </svg>
-        </span>
+        </div>
       </Link>
 
       {dropdownOpen && (
@@ -57,26 +54,17 @@ const User = () => {
           className={`absolute right-0 mt-7 flex w-[280px] flex-col rounded-lg border-[0.5px] border-stroke bg-white shadow-default dark:border-dark-3 dark:bg-gray-dark`}
         >
           <div className="flex items-center gap-2 px-5 pb-5 pt-3">
-            <div className="relative block h-12 w-12 rounded-full">
-              <Image
-                width={112}
-                height={112}
-                src="/images/user/user-03.png"
-                style={{
-                  width: "auto",
-                  height: "auto",
-                }}
-                alt="User"
-                className="overflow-hidden rounded-full"
-              />
-            </div>
-
             <div className="block">
-              <span className="block font-medium text-dark dark:text-white">
-                Jhon Smith
-              </span>
+              <div className="flex gap-1">
+                <span className="block font-medium capitalize text-dark dark:text-white">
+                  {nombre}
+                </span>
+                <span className="font-medium capitalize text-dark dark:text-white">
+                  {apellidos}
+                </span>
+              </div>
               <span className="block font-medium text-dark-5 dark:text-dark-6">
-                jonson@nextadmin.com
+                {email}
               </span>
             </div>
           </div>
@@ -142,7 +130,10 @@ const User = () => {
             </li>
           </ul>
           <div className="p-2">
-            <button className="flex w-full items-center gap-2 rounded-[7px] p-2 text-sm font-medium text-dark-4 duration-300 ease-in-out hover:bg-gray-2 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white lg:text-base">
+            <button
+              className="flex w-full items-center gap-2 rounded-[7px] p-2 text-sm font-medium text-dark-4 duration-300 ease-in-out hover:bg-gray-2 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white lg:text-base"
+              onClick={handleLogout}
+            >
               <svg
                 className="fill-current"
                 width="18"

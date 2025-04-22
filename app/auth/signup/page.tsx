@@ -1,12 +1,13 @@
 "use client";
 import Layout from "@/components/auth";
 import QRCodeGenerator from "@/components/auth/QRCodeGenerator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignupForm from "@/components/auth/SignupForm";
 import UserForm from "@/components/auth/UserForm";
-import { Button, Link } from "@nextui-org/react";
 import Timer from "@/components/auth/Timer";
 import { Toaster } from "sonner";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
 
 // Definir el objeto de los estados
 const APP_STATUS = {
@@ -14,6 +15,7 @@ const APP_STATUS = {
   ERROR: "error",
   LOADING: "loading",
   VALIDATE: "validate",
+  PASS: "pass",
 } as const;
 
 type AppStatusType = (typeof APP_STATUS)[keyof typeof APP_STATUS];
@@ -22,6 +24,8 @@ export default function Signup() {
   const [qrToken, setQrToken] = useState<string>("");
   const [expiration, setExpiration] = useState<number>(Date.now());
   const [appStatus, setAppStatus] = useState<AppStatusType>(APP_STATUS.IDLE);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleQrTokenChange = (token: string) => {
     setQrToken(token);
   };
@@ -34,48 +38,71 @@ export default function Signup() {
     setExpiration(timestamp);
   };
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await fetch("/api/auth/session", {
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      if (data.authenticated) {
+        setLoading(true);
+        const userCookie = data.cookie.value;
+        router.push(`user/${userCookie}`); // Redirigir si no está autenticado
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
   return (
     <>
-      <Toaster expand richColors position="top-right" />
-      <Layout
-        title="Bienvenido a CloudBlock!"
-        subtitle="Regístrate en tu cuenta"
-        appStatus={appStatus}
-        qrCode={
-          <div className="flex flex-col items-center justify-center gap-x-2 font-semibold uppercase text-primary">
-            <QRCodeGenerator token={qrToken} text="register">
-              <Timer targetTimestamp={expiration} />
-            </QRCodeGenerator>
-          </div>
-        }
-        AppButton={
-          qrToken ? (
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                className="text-md mb-4 flex h-14 w-full rounded-lg bg-primary bg-opacity-40  font-bold uppercase text-white"
-                as={Link}
-                href={`cloudblock://open?token=${qrToken}&type=register`}
-              >
-                Abrir App
-              </Button>
-              <Timer targetTimestamp={expiration} />
+      {loading ? (
+        <main className="flex items-center bg-dark-2">
+          <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            <div className="h-[60rem] rounded-[10px] bg-gray-dark xl:h-[50rem]">
+              <div className="flex h-full flex-col flex-wrap items-center justify-center gap-4">
+                <Spinner
+                  color="primary"
+                  label="Iniciando Sesión"
+                  classNames={{
+                    label: "text-4xl font-bold text-white pt-12",
+                    wrapper: "scale-[3]",
+                  }}
+                />
+                <p className="text-lg text-white">Puede tardar unos minutos</p>
+              </div>
             </div>
-          ) : (
-            <h1 className="flex items-center justify-center font-bold uppercase text-primary">
-              ¡Error al generar el token!
-            </h1>
-          )
-        }
-      >
-        <UserForm title="Regístrate">
-          <SignupForm
-            onQrTokenChange={handleQrTokenChange}
+          </div>
+        </main>
+      ) : (
+        <>
+          <Toaster expand richColors position="top-right" />
+          <Layout
+            title="Bienvenido a CloudBlock!"
+            subtitle="Regístrate en tu cuenta"
             appStatus={appStatus}
-            setAppStatus={handleAppStatusChange}
-            setExpiration={handleExpirationTime}
-          />
-        </UserForm>
-      </Layout>
+            qrCode={
+              <div className="flex flex-col items-center justify-center gap-x-2 font-semibold uppercase text-primary">
+                <QRCodeGenerator token={qrToken} text="register">
+                  <Timer targetTimestamp={expiration} />
+                </QRCodeGenerator>
+              </div>
+            }
+          >
+            <UserForm title="Regístrate">
+              <SignupForm
+                onQrTokenChange={handleQrTokenChange}
+                appStatus={appStatus}
+                setAppStatus={handleAppStatusChange}
+                setExpiration={handleExpirationTime}
+              />
+            </UserForm>
+          </Layout>
+        </>
+      )}
     </>
   );
 }

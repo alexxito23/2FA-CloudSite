@@ -48,7 +48,7 @@ export async function handleLogin(formData: {
     throw new Error(data.message || "Error al obtener metadatos");
   }
 
-  toast.success(data.message || "Usuario registrado con éxito");
+  toast.success(data.message || "Inicio de sesión con éxito");
 
   return { token: data.token, expiration: data.expiration };
 }
@@ -56,7 +56,9 @@ export async function handleLogin(formData: {
 export async function validateToken(
   token: string,
   router: AppRouterInstance,
-  setAppStatus: (status: "idle" | "error" | "loading" | "validate") => void,
+  setAppStatus: (
+    status: "idle" | "error" | "loading" | "validate" | "pass",
+  ) => void,
 ) {
   try {
     const checkTokenResponse = await fetch(
@@ -91,7 +93,13 @@ export async function validateToken(
 
     if (sessionData.authenticated) {
       toast.success("Autenticado correctamente. Redirigiendo...");
-      router.push("/user/1");
+      const userCookie = sessionData.cookie.value;
+      if (userCookie) {
+        // Si la cookie existe, redirige a /user/{cookie_value}
+        router.push(`/user/${userCookie}`);
+      } else {
+        throw new Error("No se encontró la cookie de usuario.");
+      }
     } else {
       throw new Error("Error: No se encontró la cookie de sesión.");
     }
@@ -103,4 +111,151 @@ export async function validateToken(
     );
     setAppStatus("error");
   }
+}
+
+export async function validateLogin(
+  token: string,
+  router: AppRouterInstance,
+  setAppStatus: (
+    status: "idle" | "error" | "loading" | "validate" | "pass",
+  ) => void,
+) {
+  try {
+    const checkTokenResponse = await fetch(
+      "http://localhost:3000/api/auth/user",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      },
+    );
+
+    const checkTokenData = await checkTokenResponse.json();
+
+    if (!checkTokenResponse.ok) {
+      throw new Error(checkTokenData.message || "Error al validar el token");
+    }
+
+    toast.success(checkTokenData.message || "Token validado correctamente");
+
+    const sessionResponse = await fetch(
+      "http://localhost:3000/api/auth/session",
+      {
+        method: "GET",
+        credentials: "include",
+      },
+    );
+
+    const sessionData = await sessionResponse.json();
+
+    if (sessionData.authenticated) {
+      toast.success("Autenticado correctamente. Redirigiendo...");
+      const userCookie = sessionData.cookie.value;
+      if (userCookie) {
+        // Si la cookie existe, redirige a /user/{cookie_value}
+        router.push(`/user/${userCookie}`);
+      } else {
+        throw new Error("No se encontró la cookie de usuario.");
+      }
+    } else {
+      throw new Error("Error: No se encontró la cookie de sesión.");
+    }
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Error en la validación del token",
+    );
+    setAppStatus("error");
+  }
+}
+
+export async function handlePass(formData: { email: string }) {
+  const response = await fetch("http://localhost:3000/api/auth/pass", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al enviar el formulario");
+  }
+
+  if (!data.expiration || !data.token) {
+    throw new Error(data.message || "Error al obtener metadatos");
+  }
+
+  toast.success(data.message || "Generación token correcta");
+
+  return { token: data.token, expiration: data.expiration };
+}
+
+export async function validateEmail(
+  token: string,
+  setAppStatus: (
+    status: "idle" | "error" | "loading" | "validate" | "pass",
+  ) => void,
+) {
+  try {
+    const checkTokenResponse = await fetch(
+      "http://localhost:3000/api/auth/check-pass",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      },
+    );
+
+    const checkTokenData = await checkTokenResponse.json();
+
+    if (!checkTokenResponse.ok) {
+      throw new Error(checkTokenData.message || "Error al validar el token");
+    }
+
+    toast.success(checkTokenData.message || "Token validado correctamente");
+    setAppStatus("pass");
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Error en la validación del token",
+    );
+    setAppStatus("error");
+  }
+}
+
+export async function handleChange(
+  formData: {
+    email: string;
+    password: string;
+  },
+  router: AppRouterInstance,
+  token: string,
+) {
+  const response = await fetch("http://localhost:3000/api/auth/change-pass", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+    body: JSON.stringify(formData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al enviar el formulario");
+  }
+
+  toast.success(data.message || "Cambio de contraseña correcto");
+  router.push("/");
+  return { message: data.message };
 }

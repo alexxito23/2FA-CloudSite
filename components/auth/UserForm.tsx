@@ -19,7 +19,7 @@ export default function UserForm({ children, title }: UserFormProps) {
 
       <div>{children}</div>
 
-      {title != "Regístrate" && (
+      {title === "Inicia Sesión" && (
         <div className="mt-6 text-center text-dark-6">
           <div>
             No tienes cuenta?{" "}
@@ -30,7 +30,7 @@ export default function UserForm({ children, title }: UserFormProps) {
         </div>
       )}
 
-      {title != "Inicia Sesión" && (
+      {title === "Regístrate" && (
         <div className="mt-6 text-center text-dark-6">
           <div>
             Tienes cuenta?{" "}
