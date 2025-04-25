@@ -1,6 +1,6 @@
 export const logout = async () => {
   try {
-    const res = await fetch("http://localhost:80/api/client/logout", {
+    const res = await fetch("/api/client/logout", {
       method: "GET",
       credentials: "include", // importante para enviar cookies
     });

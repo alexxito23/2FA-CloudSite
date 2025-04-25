@@ -7,7 +7,7 @@ export async function handleRegistration(formData: {
   email: string;
   password: string;
 }) {
-  const response = await fetch("http://localhost:3000/api/auth/register", {
+  const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -32,7 +32,7 @@ export async function handleLogin(formData: {
   email: string;
   password: string;
 }) {
-  const response = await fetch("http://localhost:3000/api/auth/login", {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -61,17 +61,14 @@ export async function validateToken(
   ) => void,
 ) {
   try {
-    const checkTokenResponse = await fetch(
-      "http://localhost:3000/api/auth/validate",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    const checkTokenResponse = await fetch("/api/auth/validate", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    );
+      credentials: "include",
+    });
 
     const checkTokenData = await checkTokenResponse.json();
 
@@ -81,13 +78,10 @@ export async function validateToken(
 
     toast.success(checkTokenData.message || "Token validado correctamente");
 
-    const sessionResponse = await fetch(
-      "http://localhost:3000/api/auth/session",
-      {
-        method: "GET",
-        credentials: "include",
-      },
-    );
+    const sessionResponse = await fetch("/api/auth/session", {
+      method: "GET",
+      credentials: "include",
+    });
 
     const sessionData = await sessionResponse.json();
 
@@ -121,17 +115,14 @@ export async function validateLogin(
   ) => void,
 ) {
   try {
-    const checkTokenResponse = await fetch(
-      "http://localhost:3000/api/auth/user",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    const checkTokenResponse = await fetch("/api/auth/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    );
+      credentials: "include",
+    });
 
     const checkTokenData = await checkTokenResponse.json();
 
@@ -141,13 +132,10 @@ export async function validateLogin(
 
     toast.success(checkTokenData.message || "Token validado correctamente");
 
-    const sessionResponse = await fetch(
-      "http://localhost:3000/api/auth/session",
-      {
-        method: "GET",
-        credentials: "include",
-      },
-    );
+    const sessionResponse = await fetch("/api/auth/session", {
+      method: "GET",
+      credentials: "include",
+    });
 
     const sessionData = await sessionResponse.json();
 
@@ -174,7 +162,7 @@ export async function validateLogin(
 }
 
 export async function handlePass(formData: { email: string }) {
-  const response = await fetch("http://localhost:3000/api/auth/pass", {
+  const response = await fetch("/api/auth/pass", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -202,17 +190,14 @@ export async function validateEmail(
   ) => void,
 ) {
   try {
-    const checkTokenResponse = await fetch(
-      "http://localhost:3000/api/auth/check-pass",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    const checkTokenResponse = await fetch("/api/auth/check-pass", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    );
+      credentials: "include",
+    });
 
     const checkTokenData = await checkTokenResponse.json();
 
@@ -240,7 +225,7 @@ export async function handleChange(
   router: AppRouterInstance,
   token: string,
 ) {
-  const response = await fetch("http://localhost:3000/api/auth/change-pass", {
+  const response = await fetch("/api/auth/change-pass", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

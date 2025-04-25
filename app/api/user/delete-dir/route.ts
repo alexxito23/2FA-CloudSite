@@ -2,15 +2,18 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const res = await fetch("http://localhost:80/api/content/delete-dir", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: req.headers.get("cookie") || "",
+    const res = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/content/delete-dir`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: req.headers.get("cookie") || "",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     const data = await res.json();
 

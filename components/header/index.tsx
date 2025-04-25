@@ -23,7 +23,7 @@ const Header = (props: {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/user/info", {
+        const response = await fetch("/api/user/info", {
           method: "GET",
           credentials: "include", // 👈 importante para que se envíen las cookies
         });

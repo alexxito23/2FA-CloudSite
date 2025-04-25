@@ -5,14 +5,17 @@ const POST = async (req: NextRequest) => {
     const formData = await req.json();
     const token = req.headers.get("authorization");
 
-    const response = await fetch(`http://localhost:80/api/auth/change-pass`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
+    const response = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/auth/change-pass`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    });
+    );
 
     const data = await response.json();
 

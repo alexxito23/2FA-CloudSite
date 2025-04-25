@@ -20,13 +20,16 @@ export async function POST(req: Request) {
 
     if (directorio) phpForm.append("directorio", directorio);
 
-    const res = await fetch("http://localhost/api/content/encrypt-upload", {
-      method: "POST",
-      body: phpForm,
-      headers: {
-        Cookie: req.headers.get("cookie") || "", // Reenvía la cookie
+    const res = await fetch(
+      `http://${process.env.FLIGHT_API}/api/content/encrypt-upload`,
+      {
+        method: "POST",
+        body: phpForm,
+        headers: {
+          Cookie: req.headers.get("cookie") || "", // Reenvía la cookie
+        },
       },
-    });
+    );
 
     const text = await res.text();
     return new Response(text, {

@@ -11,15 +11,18 @@ const POST = async (req: NextRequest) => {
     );
   }
   try {
-    const response = await fetch(`http://localhost:80/api/content/scan-dir`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `auth=${cookieValue}`,
+    const response = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/content/scan-dir`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `auth=${cookieValue}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
       },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    });
+    );
 
     const data = await response.json();
 

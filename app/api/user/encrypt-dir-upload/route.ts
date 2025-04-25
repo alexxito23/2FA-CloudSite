@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     if (directorio) phpForm.append("directorio", directorio);
 
     const res = await fetch(
-      "http://localhost/api/content/encrypt-folder-upload",
+      `http://${process.env.FLIGHT_API}/api/content/encrypt-folder-upload`,
       {
         method: "POST",
         body: phpForm,

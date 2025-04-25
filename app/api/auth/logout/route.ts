@@ -3,10 +3,13 @@ import { NextResponse } from "next/server";
 const GET = async () => {
   try {
     // Llama al backend PHP (ajusta la URL según tu entorno)
-    const response = await fetch("http://localhost:80/api/client/logout", {
-      method: "GET",
-      credentials: "include", // Para enviar cookies si tu backend lo necesita
-    });
+    const response = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/client/logout`,
+      {
+        method: "GET",
+        credentials: "include", // Para enviar cookies si tu backend lo necesita
+      },
+    );
 
     if (response.ok) {
       return NextResponse.json({ success: true }, { status: 200 });

@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     const responsePromise = new Promise<HttpResponse>((resolve, reject) => {
       // Configurar opciones para la solicitud HTTP
       const options = {
-        hostname: "localhost",
+        hostname: process.env.FLIGHT_API,
         port: 80,
         path: "/api/auth/check-register",
         method: "GET",
