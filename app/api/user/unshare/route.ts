@@ -5,15 +5,18 @@ export async function POST(req: NextRequest) {
   const cookieValue = req.cookies.get("auth")?.value;
 
   try {
-    const res = await fetch(`${process.env.FLIGHT_API}/api/content/unshared`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `auth=${cookieValue}`,
+    const res = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/content/unshared`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `auth=${cookieValue}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(body),
       },
-      credentials: "include",
-      body: JSON.stringify(body),
-    });
+    );
 
     if (res.status === 401) {
       const data = await res.json();

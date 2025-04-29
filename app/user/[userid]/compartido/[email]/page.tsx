@@ -6,11 +6,23 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
+  Input,
   Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
 } from "@nextui-org/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdDownload, MdMoreVert, MdOutlineArrowBackIos } from "react-icons/md";
+import {
+  MdDownload,
+  MdMoreVert,
+  MdOutlineArrowBackIos,
+  MdShare,
+} from "react-icons/md";
 import { toast, Toaster } from "sonner";
 
 const formatSize = (size: number) => {
@@ -30,6 +42,7 @@ interface SharedItem {
   tamano: string; // "N/A" o tamaño en bytes
   modificacion: string; // Formato: "YYYY-MM-DD HH:mm:ss"
   tipo: "Archivo" | "Directorio";
+  permiso: string;
 }
 
 export default function DirectoryContent() {
@@ -47,6 +60,10 @@ export default function DirectoryContent() {
   const [loading, setLoading] = useState(true);
   const [cookie, setCookie] = useState<string | null>(null);
   const [data, setData] = useState<SharedItem[]>([]);
+  const [search, setSearch] = useState("");
+  const filteredData = data.filter((d) =>
+    d.nombre.toLowerCase().includes(search.toLowerCase()),
+  );
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -189,70 +206,106 @@ export default function DirectoryContent() {
             </p>
           </div>
         ) : (
-          <>
-            <div className="m-4 mt-5 flex flex-1 items-center justify-between">
-              <h1 className="text-xl font-bold text-dark dark:text-white">
-                Archivos y Directorios compartidos contigo
-              </h1>
-              {estaEnSubdirectorio && (
-                <Button
-                  isIconOnly
-                  aria-label="Take a photo"
-                  color="primary"
-                  variant="ghost"
-                  onClick={handleGoBack}
+          <div className="m-4 h-[90vh] overflow-hidden [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-bold text-dark dark:text-white">
+                  Archivos / Directorios compartidos contigo
+                </h1>
+
+                <div className="flex items-center justify-center gap-4">
+                  {estaEnSubdirectorio && (
+                    <Button
+                      isIconOnly
+                      aria-label="Take a photo"
+                      color="primary"
+                      variant="ghost"
+                      onClick={handleGoBack}
+                      size="sm"
+                    >
+                      <MdOutlineArrowBackIos size={22} />
+                    </Button>
+                  )}
+                  <Input
+                    placeholder="Buscar por nombre..."
+                    value={search}
+                    onValueChange={setSearch}
+                    className="w-96 max-w-sm"
+                    classNames={{
+                      inputWrapper:
+                        "dark:bg-dark dark:data-[focus=true]:bg-dark dark:text-white dark:hover:bg-gray-800",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <Table
+                aria-label="Tabla de directorios o archivos compartidos"
+                classNames={{
+                  wrapper: "dark:bg-gray-800 bg-gray-100",
+                  base: "overflow-y-auto",
+                  th: "bg-gray-200 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400",
+                  emptyWrapper:
+                    "text-xl font-bold dark:text-white text-gray-700",
+                }}
+              >
+                <TableHeader>
+                  <TableColumn>ARCHIVO/DIRECTORIO</TableColumn>
+                  <TableColumn>PROPIETARIO</TableColumn>
+                  <TableColumn>FECHA COMPARTICIÓN</TableColumn>
+                  <TableColumn>TAMAÑO</TableColumn>
+                  <TableColumn className="text-center">ACCIONES</TableColumn>
+                </TableHeader>
+                <TableBody
+                  loadingContent={
+                    <Spinner
+                      color="primary"
+                      classNames={{
+                        label:
+                          "text-xl font-bold dark:text-white text-gray-700",
+                      }}
+                    />
+                  }
+                  emptyContent={"No tienes archivos o directorios compartidos"}
                 >
-                  <MdOutlineArrowBackIos size={24} />
-                </Button>
-              )}
-            </div>
-            <div className="m-4 mt-4 h-[48rem] overflow-auto [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Archivo/Directorio
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Propietario
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Fecha Compartición
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Tamaño
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-center">
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.isArray(data) && data.length > 0 ? (
-                    data.map((item, index) => (
-                      <tr
-                        key={index}
-                        className={`border-b bg-white dark:border-gray-700 dark:bg-gray-800 ${
-                          item.tipo === "Directorio" &&
-                          "cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-600"
-                        }`}
-                        onDoubleClick={() => {
-                          if (item.tipo === "Directorio") {
-                            handleRedirect(item.nombre);
-                          }
-                        }}
-                      >
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
+                  {filteredData.map((item, index) => (
+                    <TableRow
+                      key={index}
+                      className={`border-b bg-white dark:border-gray-700 dark:bg-gray-800 ${
+                        item.tipo === "Directorio"
+                          ? "cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-600"
+                          : ""
+                      }`}
+                      onDoubleClick={() => {
+                        if (item.tipo === "Directorio") {
+                          handleRedirect(item.nombre);
+                        }
+                      }}
+                    >
+                      <TableCell>
+                        <p className="text-sm font-medium text-dark dark:text-white">
                           {item.nombre}
-                        </td>
-                        <td className="px-6 py-4">{email}</td>
-                        <td className="px-6 py-4">{item.modificacion}</td>
-                        <td className="px-6 py-4">
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                          {email}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                          {item.modificacion}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
                           {item.tamano !== "N/A"
                             ? formatSize(parseInt(item.tamano))
                             : "N/A"}
-                        </td>
-                        <td className="text-center">
+                        </p>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {item.permiso === "lector" ? (
                           <Dropdown>
                             <DropdownTrigger>
                               <Button
@@ -288,23 +341,61 @@ export default function DirectoryContent() {
                               </DropdownSection>
                             </DropdownMenu>
                           </Dropdown>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={5}
-                        className="py-8 text-center text-3xl font-bold text-white"
-                      >
-                        No tienes archivos o directorios compartidos
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                        ) : (
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                aria-label="Actions"
+                                className="data-[hover=true]:bg-gray-4 dark:data-[hover=true]:bg-gray-7"
+                              >
+                                <MdMoreVert
+                                  size={28}
+                                  className="text-default-600"
+                                />
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                              aria-label="Acciones"
+                              className="dark:text-white"
+                            >
+                              <DropdownSection showDivider title="Acciones">
+                                <DropdownItem
+                                  key="download"
+                                  description={
+                                    item.tipo === "Archivo"
+                                      ? "Descarga el archivo"
+                                      : "Descarga el directorio"
+                                  }
+                                  startContent={<MdDownload size={24} />}
+                                  onClick={() => handleDownload(item.nombre)}
+                                >
+                                  Descargar
+                                </DropdownItem>
+                                <DropdownItem
+                                  key="share"
+                                  description={
+                                    item.tipo === "Archivo"
+                                      ? "Comparte el archivo"
+                                      : "Comparte el directorio"
+                                  }
+                                  startContent={<MdShare size={24} />}
+                                >
+                                  Compartir
+                                </DropdownItem>
+                              </DropdownSection>
+                            </DropdownMenu>
+                          </Dropdown>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
-          </>
+          </div>
         )}
       </main>
     </>

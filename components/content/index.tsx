@@ -14,6 +14,14 @@ import {
   DropdownSection,
   Select,
   SelectItem,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Chip,
+  Spinner,
 } from "@nextui-org/react";
 import {
   Dropdown,
@@ -69,7 +77,7 @@ type SharedFile = {
 };
 
 const FileContent = ({ cookie, directorio }: FileContentProps) => {
-  const [data, setData] = useState<ContentProps | null>(null);
+  const [data, setData] = useState<ContentProps>({ contenido: [] });
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalAction, setModalAction] = useState<string | null>(null);
@@ -87,10 +95,15 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
   const [shared, setShared] = useState<SharedFile[]>([]);
 
   const router = useRouter();
+  const [dataLoading, setdataLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const filteredData = data.contenido.filter((d) =>
+    d.nombre.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-
+    setdataLoading(true);
     const [error, result] = await fetchWithAuth("/api/user/scan-dir", {
       method: "POST",
       body: JSON.stringify({ directorio }),
@@ -102,6 +115,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
         router.push(`/user/${cookie}`);
       }, 0);
       setLoading(false);
+      setdataLoading(false);
       return;
     }
 
@@ -109,6 +123,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
 
     setData(result);
     setLoading(false);
+    setdataLoading(false);
   }, [cookie, directorio, router]);
 
   const fetchShared = useCallback(async () => {
@@ -148,7 +163,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
             favMap[key] = true;
           },
         );
-
+        console.log(favMap);
         setFavoritos(favMap);
       } catch (err) {
         console.error("Error cargando favoritos:", err);
@@ -423,7 +438,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
         }
 
         if (res.ok) {
-          toast.success("Directorio eliminado correctamente ✅");
+          toast.success("Se dejo de compartir con éxito");
           onClose();
           await fetchData();
           await fetchShared();
@@ -434,7 +449,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Error al eliminar el directorio ❌");
+        toast.error("Error al dejar de compartir ❌");
       }
     }
   };
@@ -776,7 +791,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
 
   return (
     <>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="mt-4">
           <h1 className="text-xl font-bold text-dark dark:text-white">
             Mi unidad
@@ -785,6 +800,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
             {directorio !== "/" ? `/${directorio}` : directorio}
           </span>
         </div>
+
         <div className="flex items-center justify-center gap-4">
           {estaEnSubdirectorio && (
             <Button
@@ -793,8 +809,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
               color="primary"
               variant="ghost"
               onClick={handleGoBack}
+              size="sm"
             >
-              <MdOutlineArrowBackIos size={24} />
+              <MdOutlineArrowBackIos size={22} />
             </Button>
           )}
           <Dropdown>
@@ -813,6 +830,16 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
               <DropdownItem key="uploadFile">Subir ficheros</DropdownItem>
             </DropdownMenu>
           </Dropdown>
+          <Input
+            placeholder="Buscar por nombre..."
+            value={search}
+            onValueChange={setSearch}
+            className="w-96 max-w-sm"
+            classNames={{
+              inputWrapper:
+                "dark:bg-dark dark:data-[focus=true]:bg-dark dark:text-white dark:hover:bg-gray-800",
+            }}
+          />
         </div>
       </div>
 
@@ -822,35 +849,74 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
         classNames={{ base: "dark:bg-gray-800" }}
       >
         <div className="mt-4 max-h-[69.5vh] overflow-auto [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th className="px-6 py-3">Archivo</th>
-                <th className="px-6 py-3">Propietario</th>
-                <th className="px-6 py-3">Última modificación</th>
-                <th className="px-6 py-3">Tamaño</th>
-                <th className="px-6 py-3">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.contenido.map((item, index) => (
-                <tr
+          <Table
+            aria-label="Tabla de archivos o directorios"
+            classNames={{
+              wrapper: "dark:bg-gray-800 bg-gray-100",
+              base: "overflow-y-auto",
+              th: "bg-gray-300 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400",
+              emptyWrapper: "text-xl font-bold dark:text-white text-gray-700",
+            }}
+            className="text-gray-500 dark:text-gray-400 rtl:text-right"
+          >
+            <TableHeader>
+              <TableColumn>ARCHIVO/DIRECTORIO</TableColumn>
+              <TableColumn>PROPIETARIO</TableColumn>
+              <TableColumn>ÚLTIMA MODIFICACIÓN</TableColumn>
+              <TableColumn>TAMAÑO</TableColumn>
+              <TableColumn width={200}>ACCIONES</TableColumn>
+            </TableHeader>
+            <TableBody
+              isLoading={dataLoading}
+              loadingContent={
+                <Spinner
+                  color="primary"
+                  classNames={{
+                    label: "text-xl font-bold dark:text-white text-gray-700",
+                  }}
+                />
+              }
+              emptyContent={"Directorio Vacío"}
+            >
+              {filteredData.map((item, index) => (
+                <TableRow
                   key={index}
                   className={`border-b bg-white dark:border-gray-700 dark:bg-gray-800 ${
                     item.tipo === "Directorio" &&
-                    "cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-600"
+                    "cursor-pointer transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
                   }`}
                   onDoubleClick={() =>
                     item.tipo === "Directorio" && handleRedirect(item.nombre)
                   }
                 >
-                  <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                    {item.nombre}
-                  </td>
-                  <td className="px-6 py-4">Tú</td>
-                  <td className="px-6 py-4">{item.modificacion}</td>
-                  <td className="px-6 py-4">{item.tamano}</td>
-                  <td className="flex items-center gap-4 px-6 py-4">
+                  <TableCell>
+                    <p className="text-sm font-medium text-dark dark:text-white">
+                      {item.nombre}
+                    </p>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      className="capitalize"
+                      color="primary"
+                      size="sm"
+                      variant="flat"
+                    >
+                      <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                        Tú
+                      </p>
+                    </Chip>
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                      {item.modificacion}
+                    </p>
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                      {item.tamano}
+                    </p>
+                  </TableCell>
+                  <TableCell className="flex items-center gap-4 px-6 py-4">
                     {isShared(item.nombre, item.tipo.toLocaleLowerCase()) ? (
                       <Dropdown>
                         <DropdownTrigger>
@@ -1032,23 +1098,22 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                         fileName={item.nombre}
                         directory={directorio}
                         seleccionado={
-                          favoritos[`${directorio}/${item.nombre}`] || false
+                          favoritos[
+                            directorio
+                              ? `${directorio.replace(/^\/+/, "")}/${item.nombre}`
+                              : item.nombre
+                          ] || false
                         }
                       />
                     )}
                     {isShared(item.nombre, item.tipo.toLocaleLowerCase()) && (
                       <MdFolderShared size={24} />
                     )}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-          {data?.contenido.length === 0 && (
-            <h1 className="mt-8 text-center text-3xl font-bold text-white">
-              Directorio Vacío
-            </h1>
-          )}
+            </TableBody>
+          </Table>
         </div>
       </Skeleton>
 

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const res = await fetch(
-      `${process.env.FLIGHT_API}/api/content/shared-files`,
+      `http://${process.env.FLIGHT_API}:80/api/content/shared-files`,
       {
         method: "POST",
         headers: {

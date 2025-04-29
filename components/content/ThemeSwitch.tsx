@@ -2,7 +2,7 @@
 
 import { useSwitch, VisuallyHidden } from "@nextui-org/react";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type SwitchProps = {
   fileName: string;
@@ -17,12 +17,17 @@ const ThemeSwitch = ({
 }: SwitchProps) => {
   const [selected, setSelected] = useState(seleccionado);
 
+  // Sincroniza el estado interno con la prop `seleccionado`
+  useEffect(() => {
+    setSelected(seleccionado);
+  }, [seleccionado]);
+
   const { Component, slots, getBaseProps, getInputProps, getWrapperProps } =
-    useSwitch({ isSelected: selected, onChange: () => {} }); // manejará el cambio manualmente
+    useSwitch({ isSelected: selected, onChange: () => {} });
 
   const handleToggle = async () => {
     const nuevoValor = !selected;
-    setSelected(nuevoValor); // cambiar el estado visual primero (optimistic UI)
+    setSelected(nuevoValor); // optimistic UI
 
     try {
       const res = await fetch("/api/user/favorite-file", {
@@ -38,15 +43,13 @@ const ThemeSwitch = ({
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("Error al actualizar el estado del archivo");
-      }
+      if (!res.ok) throw new Error("Error al actualizar favorito");
 
       const data = await res.json();
       console.log("Respuesta:", data);
     } catch (error) {
       console.error("Error:", error);
-      setSelected(!nuevoValor); // revertir si hay error
+      setSelected(!nuevoValor); // revertir si falla
     }
   };
 

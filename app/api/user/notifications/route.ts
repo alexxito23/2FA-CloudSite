@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const response = await fetch(
-      `${process.env.FLIGHT_API}/api/content/notifications`,
+      `http://${process.env.FLIGHT_API}:80/api/content/notifications`,
       {
         method: "GET",
         headers: {

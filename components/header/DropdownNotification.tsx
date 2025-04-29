@@ -121,15 +121,14 @@ const DropdownNotification = () => {
                   </div>
                 </li>
               ))}
+              {notifications.length === 0 && (
+                <div className="flex flex-1 flex-col items-center justify-center">
+                  <h1 className="text-center font-semibold uppercase dark:text-dark-6">
+                    Todavía no tienes notificaciones
+                  </h1>
+                </div>
+              )}
             </ul>
-
-            {notifications.length === 0 && (
-              <div className="flex flex-1 flex-col items-center justify-center">
-                <h1 className="text-center font-semibold uppercase dark:text-dark-6">
-                  Todavía no tienes notificaciones
-                </h1>
-              </div>
-            )}
           </div>
         )}
       </li>

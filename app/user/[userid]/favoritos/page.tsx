@@ -1,5 +1,14 @@
 "use client";
-import { Spinner } from "@nextui-org/react";
+import {
+  Input,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -29,6 +38,10 @@ export default function Favoritos() {
   const [loading, setLoading] = useState(true);
   const [cookie, setCookie] = useState<string | null>(null);
   const router = useRouter();
+  const [search, setSearch] = useState("");
+  const filteredData = favoritos.filter((f) =>
+    f.nombre.toLowerCase().includes(search.toLowerCase()),
+  );
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -101,56 +114,89 @@ export default function Favoritos() {
           </p>
         </div>
       ) : (
-        <>
-          <h1 className=" m-4 mt-5 text-xl font-bold text-dark dark:text-white">
-            Tu unidad
-          </h1>
-          <div className="m-4 mt-4 h-[48rem] overflow-auto [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Archivo
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Propietario
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Ultima modificación
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Tamaño
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Ruta
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {favoritos.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="cursor-pointer border-b bg-white transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                    onClick={() => handleRedirect(item.directorio)}
-                  >
-                    <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                      {item.nombre}
-                    </td>
-                    <td className="px-6 py-4">Tú</td>
-                    <td className="px-6 py-4">{item.fecha}</td>
-                    <td className="px-6 py-4">{formatSize(item.tamaño)}</td>
-                    <td className="px-6 py-4">{item.directorio}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {favoritos.length === 0 && (
-              <h1 className="mt-8 text-center text-3xl font-bold text-white">
-                No tienes ficheros en favoritos
+        <div className="m-4 h-[90vh] overflow-hidden [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-bold text-dark dark:text-white">
+                Archivos / Directorios favoritos
               </h1>
-            )}
+
+              <Input
+                placeholder="Buscar por nombre..."
+                value={search}
+                onValueChange={setSearch}
+                className="w-full max-w-sm"
+                classNames={{
+                  inputWrapper:
+                    "dark:bg-dark dark:data-[focus=true]:bg-dark dark:text-white dark:hover:bg-gray-800",
+                }}
+              />
+            </div>
+
+            <Table
+              aria-label="Tabla de usuarios"
+              classNames={{
+                wrapper: "dark:bg-gray-800 bg-gray-100",
+                base: "overflow-y-auto",
+                th: "bg-gray-200 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400",
+                emptyWrapper: "text-xl font-bold dark:text-white text-gray-700",
+              }}
+            >
+              <TableHeader>
+                <TableColumn>ARCHIVO/DIRECTORIO</TableColumn>
+                <TableColumn>PROPIETARIO</TableColumn>
+                <TableColumn>ÚLTIMA MODIFICACIÓN</TableColumn>
+                <TableColumn>TAMAÑO</TableColumn>
+                <TableColumn>RUTA</TableColumn>
+              </TableHeader>
+              <TableBody
+                loadingContent={
+                  <Spinner
+                    color="primary"
+                    classNames={{
+                      label: "text-xl font-bold dark:text-white text-gray-700",
+                    }}
+                  />
+                }
+                emptyContent={"No tienes ficheros en favoritos"}
+              >
+                {filteredData.map((item, index) => (
+                  <TableRow
+                    key={index}
+                    className="h-14 cursor-pointer border-b bg-white transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                    onDoubleClick={() => handleRedirect(item.directorio)}
+                  >
+                    <TableCell>
+                      <p className="text-sm font-medium text-dark dark:text-white">
+                        {item.nombre}
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-sm font-medium text-dark dark:text-white">
+                        Tú
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                        {item.fecha}
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                        {formatSize(item.tamaño)}
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                        {item.directorio}
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
-        </>
+        </div>
       )}
     </main>
   );

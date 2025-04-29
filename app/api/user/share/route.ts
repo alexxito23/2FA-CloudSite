@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const cookieValue = req.cookies.get("auth")?.value;
 
-  const { nombre, tipo, correos, directorio } = body;
+  const { nombre, tipo, correos, directorio, propietario } = body;
 
   // Validar formato
   if (!Array.isArray(correos) || correos.length === 0) {
@@ -28,15 +28,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${process.env.FLIGHT_API}/api/content/shared`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `auth=${cookieValue}`,
+    const res = await fetch(
+      `http://${process.env.FLIGHT_API}:80/api/content/shared`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `auth=${cookieValue}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          nombre,
+          tipo,
+          correos,
+          directorio,
+          propietario,
+        }),
       },
-      credentials: "include",
-      body: JSON.stringify({ nombre, tipo, correos, directorio }),
-    });
+    );
 
     if (res.status === 401) {
       const data = await res.json();
