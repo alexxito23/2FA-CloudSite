@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const res = await fetch(
-      `${process.env.FLIGHT_API}/api/content/revoke-share`,
+      `${process.env.FLIGHT_API}/api/content/delete-group`,
       {
         method: "POST",
         headers: {

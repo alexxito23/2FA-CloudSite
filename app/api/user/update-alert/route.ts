@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/update-alert`,
+      `${process.env.FLIGHT_API}/api/content/update-alert`,
       {
         method: "POST",
         headers: {

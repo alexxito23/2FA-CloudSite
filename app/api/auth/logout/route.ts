@@ -4,7 +4,7 @@ const GET = async () => {
   try {
     // Llama al backend PHP (ajusta la URL según tu entorno)
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/client/logout`,
+      `${process.env.FLIGHT_API}/api/client/logout`,
       {
         method: "GET",
         credentials: "include", // Para enviar cookies si tu backend lo necesita

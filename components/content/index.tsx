@@ -353,7 +353,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
         formData.append("files[]", file);
         formData.append(
           "paths[]",
-          (file as any).webkitRelativePath || file.name,
+          (file as File).webkitRelativePath || file.name,
         );
       });
 
@@ -500,7 +500,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
           <div className="mt-2">
             <input
               type="file"
-              webkitdirectory="true"
+              webkitdirectory
               directory=""
               className="hidden"
               id="upload-dir"
@@ -917,7 +917,10 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                     </p>
                   </TableCell>
                   <TableCell className="flex items-center gap-4 px-6 py-4">
-                    {isShared(item.nombre, item.tipo.toLocaleLowerCase()) ? (
+                    {isShared(
+                      item.nombre,
+                      item.tipo.toLocaleLowerCase() as "archivo" | "directorio",
+                    ) ? (
                       <Dropdown>
                         <DropdownTrigger>
                           <Button
@@ -963,7 +966,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                                 handleShare(
                                   item.nombre,
                                   directorio,
-                                  item.tipo.toLocaleLowerCase(),
+                                  item.tipo.toLocaleLowerCase() as
+                                    | "archivo"
+                                    | "directorio",
                                 )
                               }
                               startContent={<MdShare size={24} />}
@@ -980,7 +985,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                               onClick={() =>
                                 handleUnshare(
                                   item.nombre,
-                                  item.tipo.toLocaleLowerCase(),
+                                  item.tipo.toLocaleLowerCase() as
+                                    | "archivo"
+                                    | "directorio",
                                 )
                               }
                               startContent={
@@ -1060,7 +1067,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                                 handleShare(
                                   item.nombre,
                                   directorio,
-                                  item.tipo.toLocaleLowerCase(),
+                                  item.tipo.toLocaleLowerCase() as
+                                    | "archivo"
+                                    | "directorio",
                                 )
                               }
                               startContent={<MdShare size={24} />}
@@ -1106,9 +1115,10 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                         }
                       />
                     )}
-                    {isShared(item.nombre, item.tipo.toLocaleLowerCase()) && (
-                      <MdFolderShared size={24} />
-                    )}
+                    {isShared(
+                      item.nombre,
+                      item.tipo.toLocaleLowerCase() as "archivo" | "directorio",
+                    ) && <MdFolderShared size={24} />}
                   </TableCell>
                 </TableRow>
               ))}

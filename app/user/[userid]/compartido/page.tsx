@@ -67,6 +67,16 @@ type SharedFile = {
   tipo: "archivo" | "directorio";
 };
 
+type Resultado = {
+  email: string;
+  estado: string;
+  razon: string;
+};
+
+interface FetchCompartidosResponse {
+  compartidos: SharedFile[];
+}
+
 const formatSize = (size: number) => {
   if (size < 1024) {
     return `${size} B`; // Si es menor que 1 KB, mostramos en bytes.
@@ -84,7 +94,7 @@ export default function Compartido() {
   const pathname = usePathname();
   const cookieId = pathname.split("/")[2];
   const [loading, setLoading] = useState(true);
-  const [dataLoading, setdataLoading] = useState(false);
+  const [dataLoading, setdataLoading] = useState(true);
   const [cookie, setCookie] = useState<string | null>(null);
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -170,7 +180,9 @@ export default function Compartido() {
       return null;
     }
 
-    setShared(result.compartidos);
+    const data = result as FetchCompartidosResponse;
+
+    setShared(data.compartidos);
   }, []);
 
   useEffect(() => {
@@ -245,11 +257,11 @@ export default function Compartido() {
     setShareOwner(email);
 
     const sharedData = shared.filter(
-      (file: any) => file.nombre === nombre && file.tipo === tipo,
+      (file: SharedFile) => file.nombre === nombre && file.tipo === tipo,
     );
 
     if (sharedData.length > 0) {
-      const updatedShareList = sharedData.map((file: any) => ({
+      const updatedShareList = sharedData.map((file: SharedFile) => ({
         correo: file.destinatario_email,
         permiso: file.permiso,
       }));
@@ -296,23 +308,27 @@ export default function Compartido() {
 
         toast.success(data.message);
         await fetchShared();
-        if (Array.isArray(data.resultados) && data.resultados.length > 0) {
-          const errores = data.resultados.filter((r) => r.estado === "fallo");
 
-          if (errores.length > 0) {
-            toast.warning(
-              <div>
-                <strong>Algunos correos fallaron:</strong>
-                <ul>
-                  {errores.map((r, idx) => (
-                    <li key={idx}>
-                      {r.email}: {r.razon}
-                    </li>
-                  ))}
-                </ul>
-              </div>,
-            );
-          }
+        const resultados = data.resultados as Resultado[];
+
+        if (
+          Array.isArray(resultados) &&
+          resultados.some((r) => r.estado === "fallo")
+        ) {
+          const errores = resultados.filter((r) => r.estado === "fallo");
+
+          toast.warning(
+            <div>
+              <strong>Algunos correos fallaron:</strong>
+              <ul>
+                {errores.map(({ email, razon }, idx) => (
+                  <li key={idx}>
+                    {email}: {razon}
+                  </li>
+                ))}
+              </ul>
+            </div>,
+          );
         }
 
         onClose();
@@ -467,7 +483,7 @@ export default function Compartido() {
               </div>
 
               <Table
-                aria-label="Tabla de usuarios"
+                aria-label="Tabla de compartidos"
                 classNames={{
                   wrapper: "dark:bg-gray-800 bg-gray-100",
                   base: "overflow-y-auto",

@@ -5,7 +5,7 @@ const POST = async (req: NextRequest) => {
     const formData = await req.json();
 
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/auth/register`,
+      `${process.env.FLIGHT_API}/api/auth/register`,
       {
         method: "POST",
         headers: {

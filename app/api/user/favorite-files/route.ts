@@ -1,7 +1,7 @@
 export async function GET(req: Request) {
   try {
     const res = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/favorite-files`,
+      `${process.env.FLIGHT_API}/api/content/favorite-files`,
       {
         method: "GET",
         credentials: "include",

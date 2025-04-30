@@ -28,24 +28,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/shared`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `auth=${cookieValue}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          nombre,
-          tipo,
-          correos,
-          directorio,
-          propietario,
-        }),
+    const res = await fetch(`${process.env.FLIGHT_API}/api/content/shared`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `auth=${cookieValue}`,
       },
-    );
+      credentials: "include",
+      body: JSON.stringify({
+        nombre,
+        tipo,
+        correos,
+        directorio,
+        propietario,
+      }),
+    });
 
     if (res.status === 401) {
       const data = await res.json();

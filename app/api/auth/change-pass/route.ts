@@ -6,7 +6,7 @@ const POST = async (req: NextRequest) => {
     const token = req.headers.get("authorization");
 
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/auth/change-pass`,
+      `${process.env.FLIGHT_API}/api/auth/change-pass`,
       {
         method: "POST",
         headers: {

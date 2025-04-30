@@ -2,7 +2,7 @@ export async function POST(req: Request) {
   const { nombre, directoryName, email } = await req.json();
 
   const res = await fetch(
-    `http://${process.env.FLIGHT_API}:80/api/content/shared-download`,
+    `${process.env.FLIGHT_API}/api/content/shared-download`,
     {
       method: "POST",
       headers: {

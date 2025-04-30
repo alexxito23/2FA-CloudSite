@@ -12,7 +12,7 @@ const POST = async (req: NextRequest) => {
   }
   try {
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/scan-dir`,
+      `${process.env.FLIGHT_API}/api/content/scan-dir`,
       {
         method: "POST",
         headers: {

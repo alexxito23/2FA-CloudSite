@@ -4,16 +4,13 @@ const POST = async (req: NextRequest) => {
   try {
     const formData = await req.json();
 
-    const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/auth/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const response = await fetch(`${process.env.FLIGHT_API}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(formData),
+    });
 
     const data = await response.json();
 

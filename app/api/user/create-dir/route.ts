@@ -13,7 +13,7 @@ const POST = async (req: NextRequest) => {
 
   try {
     const response = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/create-dir`,
+      `${process.env.FLIGHT_API}/api/content/create-dir`,
       {
         method: "POST",
         headers: {

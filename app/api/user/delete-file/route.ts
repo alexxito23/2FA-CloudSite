@@ -3,7 +3,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const res = await fetch(
-      `http://${process.env.FLIGHT_API}:80/api/content/delete-file`,
+      `${process.env.FLIGHT_API}/api/content/delete-file`,
       {
         method: "POST",
         credentials: "include",

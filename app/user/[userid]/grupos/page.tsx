@@ -24,232 +24,16 @@ import {
   useDisclosure,
   Textarea,
 } from "@nextui-org/react";
-import { MdDelete, MdMoreVert, MdShare, MdAdd, MdClose } from "react-icons/md";
+import { MdDelete, MdMoreVert, MdAdd, MdClose } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export const users = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  {
-    id: 2,
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    team: "Development",
-    status: "paused",
-    age: "25",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
-  },
-  {
-    id: 3,
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    team: "Development",
-    status: "active",
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
-  },
-  {
-    id: 4,
-    name: "William Howard",
-    role: "Community Manager",
-    team: "Marketing",
-    status: "vacation",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-];
+interface Grupos {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  emails: string[];
+}
 
 export default function App() {
   const [search, setSearch] = useState("");
@@ -257,7 +41,7 @@ export default function App() {
   const cookieId = pathname.split("/")[2];
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [grupos, setGrupos] = useState([]);
+  const [grupos, setGrupos] = useState<Grupos[]>([]);
   const filteredUsers = grupos.filter((u) =>
     u.nombre.toLowerCase().includes(search.toLowerCase()),
   );
@@ -268,11 +52,6 @@ export default function App() {
     onClose: onCreateModalClose,
   } = useDisclosure();
   const {
-    isOpen: isReviewModalOpen,
-    onOpen: onReviewModalOpen,
-    onClose: onReviewModalClose,
-  } = useDisclosure();
-  const {
     isOpen: isDeleteModalOpen,
     onOpen: onDeleteModalOpen,
     onClose: onDeleteModalClose,
@@ -280,11 +59,10 @@ export default function App() {
 
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
-  const [emails, setEmails] = useState([]);
+  const [emails, setEmails] = useState<string[]>([]);
   const [currentEmail, setCurrentEmail] = useState("");
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [members, setMembers] = useState([]);
-  const [loadingMembers, setLoadingMembers] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [dataLoading, setdataLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -318,6 +96,7 @@ export default function App() {
 
   const scanGroup = useCallback(async () => {
     try {
+      setdataLoading(true);
       const response = await fetch("/api/groups/scan", {
         credentials: "include",
       });
@@ -332,6 +111,8 @@ export default function App() {
       }
     } catch (error) {
       console.error("Error de autenticación:", error);
+    } finally {
+      setdataLoading(false);
     }
   }, []);
 
@@ -354,7 +135,7 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const data = response.json();
+        const data = await response.json();
         toast.error(data.message ?? "Error al crear el crupo");
       }
 
@@ -363,6 +144,7 @@ export default function App() {
         // Aquí podrías actualizar la lista de grupos si es necesario
         setNewGroupName("");
         setNewGroupDescription("");
+        await scanGroup();
         setEmails([]);
         toast.success("Grupo creado con éxito");
       }
@@ -371,36 +153,30 @@ export default function App() {
     }
   };
 
-  const handleFetchMembers = async () => {
-    setLoadingMembers(true);
-    try {
-      const response = await fetch(
-        `/api/groups/members?groupName=${selectedGroup}`,
-      );
-      const data = await response.json();
-      setMembers(data.members);
-    } catch (error) {
-      console.error("Error fetching members:", error);
-    } finally {
-      setLoadingMembers(false);
-    }
-  };
-
   const handleDeleteGroup = async () => {
     try {
-      await fetch("/api/groups/delete", {
+      const response = await fetch("/api/groups/delete", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          groupName: selectedGroup,
+          name: selectedGroup,
         }),
       });
+
+      if (!response.ok) {
+        const data = await response.json();
+        toast.error(data.message ?? "Error al crear el crupo");
+        return;
+      }
+
+      await scanGroup();
+      toast.success("Grupo eliminado correctamente");
       onDeleteModalClose();
-      // Aquí podrías actualizar la lista de grupos si es necesario
     } catch (error) {
       console.error("Error deleting group:", error);
+      toast.error("Error al eliminar el grupo");
     }
   };
 
@@ -469,28 +245,18 @@ export default function App() {
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isReviewModalOpen} onClose={onReviewModalClose}>
+      <Modal isOpen={isDeleteModalOpen} onClose={onDeleteModalClose} size="xl">
         <ModalContent>
-          <ModalHeader>Miembros del grupo</ModalHeader>
-          <ModalBody>
-            {loadingMembers ? (
-              <Spinner />
-            ) : (
-              <div className="flex flex-col gap-2">
-                {members.map((member) => (
-                  <Chip key={member}>{member}</Chip>
-                ))}
-              </div>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={isDeleteModalOpen} onClose={onDeleteModalClose}>
-        <ModalContent>
-          <ModalHeader>Confirmar eliminación</ModalHeader>
-          <ModalBody>
-            ¿Estás seguro de eliminar el grupo {selectedGroup}?
+          <ModalHeader className="dark:text-white">
+            Confirmar eliminación
+          </ModalHeader>
+          <ModalBody className="dark:text-white">
+            <p>
+              ¿Estás seguro de que deseas eliminar el archivo{" "}
+              <strong>{selectedGroup}</strong>?
+              <br />
+              <small>Esta acción no se puede deshacer.</small>
+            </p>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onDeleteModalClose}>Cancelar</Button>
@@ -515,7 +281,7 @@ export default function App() {
           </p>
         </div>
       ) : (
-        <div className="m-4 h-[90vh] overflow-hidden [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
+        <div className="m-4 h-[89vh] overflow-hidden [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-bold text-dark dark:text-white">
@@ -559,6 +325,7 @@ export default function App() {
                 <TableColumn className="text-center">ACCIONES</TableColumn>
               </TableHeader>
               <TableBody
+                isLoading={dataLoading}
                 loadingContent={
                   <Spinner
                     color="primary"
@@ -582,14 +349,18 @@ export default function App() {
                       </p>
                     </TableCell>
                     <TableCell>
-                      <Chip
-                        className="capitalize"
-                        color="primary"
-                        size="sm"
-                        variant="flat"
-                      >
-                        Tú
-                      </Chip>
+                      <div className="flex flex-wrap gap-2">
+                        {user.emails.map((item, index) => (
+                          <Chip
+                            color="primary"
+                            size="sm"
+                            variant="flat"
+                            key={index}
+                          >
+                            {item}
+                          </Chip>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell className="text-center">
                       <Dropdown>
@@ -610,20 +381,6 @@ export default function App() {
                           aria-label="Acciones"
                           className="dark:text-white"
                         >
-                          <DropdownSection showDivider title="Acciones">
-                            <DropdownItem
-                              key="revise"
-                              description="Revisa el grupo"
-                              startContent={<MdShare size={24} />}
-                              onClick={() => {
-                                setSelectedGroup(user.name);
-                                handleFetchMembers();
-                                onReviewModalOpen();
-                              }}
-                            >
-                              Revisar
-                            </DropdownItem>
-                          </DropdownSection>
                           <DropdownSection>
                             <DropdownItem
                               key="delete"
@@ -632,7 +389,7 @@ export default function App() {
                               description="Elimina el grupo"
                               startContent={<MdDelete size={24} />}
                               onClick={() => {
-                                setSelectedGroup(user.name);
+                                setSelectedGroup(user.nombre);
                                 onDeleteModalOpen();
                               }}
                             >
