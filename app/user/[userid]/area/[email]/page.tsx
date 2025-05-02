@@ -128,9 +128,9 @@ export default function DirectoryContent() {
     parts.pop();
     const previous = parts.join("%2F");
     if (previous !== "") {
-      router.push(`/user/${cookie}/compartido/${email}%2F${previous}`);
+      router.push(`/user/${cookie}/area/${email}%2F${previous}`);
     } else {
-      router.push(`/user/${cookie}/compartido`);
+      router.push(`/user/${cookie}/area`);
     }
   };
 

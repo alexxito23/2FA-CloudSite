@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider>
-      <Toaster />
+      <Toaster expand richColors position="top-right" />
       {children}
     </NextUIProvider>
   );

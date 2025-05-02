@@ -1,5 +1,13 @@
 "use client";
-import { Spinner } from "@nextui-org/react";
+import {
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdCheckCircle, MdError } from "react-icons/md";
@@ -87,35 +95,43 @@ export default function Profile() {
             Tu historial de accesos
           </h1>
           <div className="m-4 mt-4 h-[85vh] overflow-auto [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    IP origen
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Fecha
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Agente
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Estado
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table
+              aria-label="Tabla de usuarios"
+              classNames={{
+                wrapper: "dark:bg-gray-800 bg-gray-100",
+                base: "overflow-y-auto",
+                th: "bg-gray-200 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400",
+                emptyWrapper: "text-xl font-bold dark:text-white text-gray-700",
+              }}
+            >
+              <TableHeader>
+                <TableColumn>IP ORIGEN</TableColumn>
+                <TableColumn>FECHA</TableColumn>
+                <TableColumn>AGENTE</TableColumn>
+                <TableColumn>ESTADO</TableColumn>
+              </TableHeader>
+              <TableBody emptyContent={"No tienes historial de accesos"}>
                 {data.map((item, index) => (
-                  <tr
+                  <TableRow
                     key={index}
                     className="border-b bg-white dark:border-gray-700 dark:bg-gray-800"
                   >
-                    <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                      {item.ip_origen}
-                    </td>
-                    <td className="px-6 py-4">{item.fecha}</td>
-                    <td className="px-6 py-4">{item.navegador}</td>
-                    <td className="px-6 py-4">
+                    <TableCell className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-dark dark:text-white">
+                        {item.ip_origen}
+                      </p>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <p className="text-sm font-medium text-dark dark:text-white">
+                        {item.fecha}
+                      </p>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <p className="text-sm font-medium text-dark dark:text-white">
+                        {item.navegador}
+                      </p>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
                       {item.estado === "exitoso" ? (
                         <MdCheckCircle
                           size={24}
@@ -129,16 +145,11 @@ export default function Profile() {
                           className="fill-red-500 dark:fill-red-700"
                         />
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-            {data.length === 0 && (
-              <h1 className="mt-8 text-center text-3xl font-bold text-white">
-                No tienes ficheros en favoritos
-              </h1>
-            )}
+              </TableBody>
+            </Table>
           </div>
         </>
       )}

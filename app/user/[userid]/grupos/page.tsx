@@ -42,8 +42,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [grupos, setGrupos] = useState<Grupos[]>([]);
-  const filteredUsers = grupos.filter((u) =>
-    u.nombre.toLowerCase().includes(search.toLowerCase()),
+  const filteredUsers = (Array.isArray(grupos) ? grupos : []).filter(
+    (g) => g?.nombre?.toLowerCase()?.includes(search.toLowerCase()) ?? false,
   );
 
   const {

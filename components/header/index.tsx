@@ -1,4 +1,3 @@
-import SearchForm from "./SearchForm";
 import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownNotification from "./DropdownNotification";
 import User from "./User";
@@ -86,7 +85,6 @@ const Header = (props: {
 
         <div className="2xsm:gap-4 flex items-center justify-normal gap-2 lg:w-full lg:justify-between xl:w-auto xl:justify-normal">
           <ul className="2xsm:gap-4 flex items-center gap-2">
-            <SearchForm />
             <DarkModeSwitcher />
             <DropdownNotification />
           </ul>

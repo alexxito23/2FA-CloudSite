@@ -39,8 +39,8 @@ export default function Favoritos() {
   const [cookie, setCookie] = useState<string | null>(null);
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const filteredData = favoritos.filter((f) =>
-    f.nombre.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = (Array.isArray(favoritos) ? favoritos : []).filter(
+    (f) => f?.nombre?.toLowerCase()?.includes(search.toLowerCase()) ?? false,
   );
 
   useEffect(() => {

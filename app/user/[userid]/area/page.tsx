@@ -38,19 +38,14 @@ import {
 import { toast } from "sonner";
 
 type Comparticion = {
-  comparticion_id: number;
-  fecha_comparticion: string;
-  permiso: string;
-  estado: string;
+  nombre: string;
+  fecha: string;
+  tamaño: number | null;
+  permiso: "copropietario" | "lector";
   propietario_email: string;
-  directorio_id: number | null;
-  directorio_nombre: string | null;
-  directorio_ruta_padre: number | null;
-  archivo_id: number | null;
-  archivo_nombre: string | null;
-  archivo_tamaño: number | null;
-  archivo_fecha: string | null;
-  directorio_ruta: string;
+  tipo: "archivo" | "directorio";
+  ruta: string;
+  grupo: { nombre: string };
 };
 
 type ShareUser = {
@@ -100,13 +95,9 @@ export default function Compartido() {
   const [search, setSearch] = useState("");
   const filteredData = (
     Array.isArray(comparticiones) ? comparticiones : []
-  ).filter((c) => {
-    const searchLower = search.toLowerCase();
-    return (
-      (c.archivo_nombre?.toLowerCase().includes(searchLower) ?? false) ||
-      (c.directorio_nombre?.toLowerCase().includes(searchLower) ?? false)
-    );
-  });
+  ).filter(
+    (c) => c?.nombre?.toLowerCase()?.includes(search.toLowerCase()) ?? false,
+  );
 
   const [shareList, setShareList] = useState<ShareUser[]>([
     { correo: "", permiso: "lector" },
@@ -154,12 +145,12 @@ export default function Compartido() {
   const fetchComparticiones = async () => {
     try {
       setdataLoading(true);
-      const res = await fetch("/api/user/shared-files", {
+      const res = await fetch("/api/groups/files", {
         method: "GET",
         credentials: "include",
       });
       const data = await res.json();
-      setComparticiones(data.comparticiones || []);
+      setComparticiones(data || []);
       setLoading(false); // <-- Agregado para quitar el spinner
     } catch (err) {
       console.error("Error cargando archivos compartidos:", err);
@@ -196,7 +187,7 @@ export default function Compartido() {
   const handleRedirect = (ruta: string, email: string) => {
     const rutaCodificada =
       ruta === "/" ? ruta : `%2F${encodeURIComponent(ruta)}`;
-    router.push(`/user/${cookie}/compartido/${email}${rutaCodificada}`);
+    router.push(`/user/${cookie}/area/${email}${rutaCodificada}`);
   };
 
   const handleDownload = async (
@@ -470,7 +461,7 @@ export default function Compartido() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <h1 className="text-xl font-bold text-dark dark:text-white">
-                  Archivos / Directorios compartidos contigo
+                  Archivos / Directorios compartidos contigo mediante grupos
                 </h1>
 
                 <Input
@@ -498,6 +489,7 @@ export default function Compartido() {
                 <TableHeader>
                   <TableColumn>ARCHIVO/DIRECTORIO</TableColumn>
                   <TableColumn>PROPIETARIO</TableColumn>
+                  <TableColumn>GRUPO</TableColumn>
                   <TableColumn>FECHA COMPARTICIÓN</TableColumn>
                   <TableColumn>TAMAÑO</TableColumn>
                   <TableColumn>PERMISO</TableColumn>
@@ -521,41 +513,50 @@ export default function Compartido() {
                     <TableRow
                       key={index}
                       className={`border-b bg-white dark:border-gray-700 dark:bg-gray-800 ${
-                        item.directorio_nombre
+                        item.tipo === "directorio"
                           ? "cursor-pointer transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
                           : ""
                       }`}
                       onDoubleClick={() => {
-                        if (item.directorio_nombre) {
-                          handleRedirect(
-                            item.directorio_nombre,
-                            item.propietario_email,
-                          );
+                        if (item.tipo === "directorio") {
+                          handleRedirect(item.nombre, item.propietario_email);
                         }
                       }}
                     >
                       <TableCell>
                         <p className="text-sm font-medium text-dark dark:text-white">
-                          {item.archivo_nombre
-                            ? item.archivo_nombre
-                            : item.directorio_nombre}
+                          {item.nombre}
                         </p>
                       </TableCell>
                       <TableCell>
-                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                        <Chip
+                          color="primary"
+                          size="sm"
+                          variant="flat"
+                          key={index}
+                        >
                           {item.propietario_email}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          className="capitalize"
+                          color="primary"
+                          size="sm"
+                          variant="flat"
+                          key={index}
+                        >
+                          {item.grupo.nombre}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
+                          {item.fecha}
                         </p>
                       </TableCell>
                       <TableCell>
                         <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
-                          {item.fecha_comparticion}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-bold text-sm text-gray-500 dark:text-gray-400">
-                          {item.archivo_tamaño
-                            ? formatSize(item.archivo_tamaño)
-                            : "-"}
+                          {item.tamaño ? formatSize(item.tamaño) : "-"}
                         </p>
                       </TableCell>
                       <TableCell>
@@ -570,7 +571,7 @@ export default function Compartido() {
                           size="sm"
                           variant="flat"
                         >
-                          {item.estado}
+                          Activo
                         </Chip>
                       </TableCell>
                       <TableCell className="text-center">
@@ -598,16 +599,15 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="download"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Descarga el archivo"
                                       : "Descarga el directorio"
                                   }
                                   startContent={<MdDownload size={24} />}
                                   onClick={() =>
                                     handleDownload(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
-                                      item.directorio_ruta,
+                                      item.nombre,
+                                      item.ruta,
                                       item.propietario_email,
                                     )
                                   }
@@ -618,9 +618,8 @@ export default function Compartido() {
                             </DropdownMenu>
                           </Dropdown>
                         ) : isShared(
-                            item.archivo_nombre ??
-                              (item.directorio_nombre as string),
-                            item.archivo_nombre ? "archivo" : "directorio",
+                            item.nombre,
+                            item.tipo === "archivo" ? "archivo" : "directorio",
                           ) ? (
                           <Dropdown>
                             <DropdownTrigger>
@@ -645,16 +644,15 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="download"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Descarga el archivo"
                                       : "Descarga el directorio"
                                   }
                                   startContent={<MdDownload size={24} />}
                                   onClick={() =>
                                     handleDownload(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
-                                      decodeURIComponent(item.directorio_ruta),
+                                      item.nombre,
+                                      decodeURIComponent(item.ruta),
                                       item.propietario_email,
                                     )
                                   }
@@ -664,17 +662,16 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="share"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Comparte el archivo"
                                       : "Comparte el directorio"
                                   }
                                   startContent={<MdShare size={24} />}
                                   onClick={() =>
                                     handleShare(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
+                                      item.nombre,
                                       item.propietario_email,
-                                      item.archivo_nombre
+                                      item.tipo === "archivo"
                                         ? "archivo"
                                         : "directorio",
                                     )
@@ -685,7 +682,7 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="unshare"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Deja de compartir el archivo"
                                       : "Deja de compartir el directorio"
                                   }
@@ -694,10 +691,9 @@ export default function Compartido() {
                                   }
                                   onClick={() =>
                                     handleUnshare(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
+                                      item.nombre,
                                       item.propietario_email,
-                                      item.archivo_nombre
+                                      item.tipo === "archivo"
                                         ? "archivo"
                                         : "directorio",
                                     )
@@ -732,16 +728,15 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="download"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Descarga el archivo"
                                       : "Descarga el directorio"
                                   }
                                   startContent={<MdDownload size={24} />}
                                   onClick={() =>
                                     handleDownload(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
-                                      decodeURIComponent(item.directorio_ruta),
+                                      item.nombre,
+                                      decodeURIComponent(item.ruta),
                                       item.propietario_email,
                                     )
                                   }
@@ -751,17 +746,16 @@ export default function Compartido() {
                                 <DropdownItem
                                   key="share"
                                   description={
-                                    item.archivo_nombre
+                                    item.tipo === "archivo"
                                       ? "Comparte el archivo"
                                       : "Comparte el directorio"
                                   }
                                   startContent={<MdShare size={24} />}
                                   onClick={() =>
                                     handleShare(
-                                      (item.archivo_nombre ??
-                                        item.directorio_nombre) as string,
+                                      item.nombre,
                                       item.propietario_email,
-                                      item.archivo_nombre
+                                      item.tipo === "archivo"
                                         ? "archivo"
                                         : "directorio",
                                     )

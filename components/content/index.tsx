@@ -76,6 +76,16 @@ type SharedFile = {
   tipo: "archivo" | "directorio";
 };
 
+interface DirectoryInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  webkitdirectory?: string;
+  directory?: string;
+}
+
+const DirectoryInput: React.FC<DirectoryInputProps> = (props) => {
+  return <input {...props} />;
+};
+
 const FileContent = ({ cookie, directorio }: FileContentProps) => {
   const [data, setData] = useState<ContentProps>({ contenido: [] });
   const [loading, setLoading] = useState(true);
@@ -97,8 +107,10 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
   const router = useRouter();
   const [dataLoading, setdataLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const filteredData = data.contenido.filter((d) =>
-    d.nombre.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = (
+    Array.isArray(data.contenido) ? data.contenido : []
+  ).filter(
+    (d) => d?.nombre?.toLowerCase()?.includes(search.toLowerCase()) ?? false,
   );
 
   const fetchData = useCallback(async () => {
@@ -143,8 +155,12 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
   }, [directorio]);
 
   useEffect(() => {
-    fetchData();
-    fetchShared();
+    const loadData = async () => {
+      await fetchData();
+      await fetchShared();
+    };
+
+    loadData();
   }, [fetchData, fetchShared]);
 
   useEffect(() => {
@@ -498,9 +514,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
       case "uploadDir":
         return (
           <div className="mt-2">
-            <input
+            <DirectoryInput
               type="file"
-              webkitdirectory
+              webkitdirectory="true"
               directory=""
               className="hidden"
               id="upload-dir"
@@ -558,8 +574,8 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
             {shareList.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
-                  type="email"
-                  placeholder="correo@example.com"
+                  type="text"
+                  placeholder="correo@example.com | Nombre grupo"
                   value={item.correo}
                   onChange={(e) => {
                     const updated = [...shareList];

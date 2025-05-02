@@ -1,9 +1,12 @@
 export const logout = async () => {
   try {
-    const res = await fetch("/api/client/logout", {
-      method: "GET",
-      credentials: "include", // importante para enviar cookies
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_FLIGHT_API}/api/client/logout`,
+      {
+        method: "GET",
+        credentials: "include", // importante para enviar cookies
+      },
+    );
 
     if (res.ok) {
       // Logout exitoso

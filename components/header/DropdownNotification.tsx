@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ClickOutside from "@/components/ClickOutside";
 import { BiCheckDouble, BiInfoCircle } from "react-icons/bi";
+import { LuTriangleAlert } from "react-icons/lu";
 
 interface Notificacion {
   id: number;
@@ -106,13 +107,20 @@ const DropdownNotification = () => {
                       if (!item.leida) marcarComoLeida(item.id);
                     }}
                   >
-                    <BiInfoCircle
-                      size={32}
-                      className=" fill-dark dark:fill-white "
-                    />
+                    {item.tipo === "seguridad" ? (
+                      <LuTriangleAlert size={32} className="text-yellow-500" />
+                    ) : (
+                      <BiInfoCircle
+                        size={32}
+                        className=" fill-dark dark:fill-white "
+                      />
+                    )}
                     <span className="block w-[370px]">
                       <span className="text-body-sm block font-medium text-dark-5 dark:text-dark-6">
                         {item.mensaje}
+                      </span>
+                      <span className="block text-xs font-medium text-dark-5 dark:text-dark-6">
+                        {item.fecha_creacion}
                       </span>
                     </span>
                     {item.leida && (

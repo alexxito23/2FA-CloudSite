@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Link } from "@nextui-org/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,9 @@ interface SigninFormProps {
   setExpiration: (timestamp: number) => void;
 }
 
+const MAX_ATTEMPTS = 3;
+const BLOCK_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
+
 export default function SigninForm({
   onQrTokenChange,
   appStatus,
@@ -30,7 +33,31 @@ export default function SigninForm({
     password: "",
   });
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockTime, setBlockTime] = useState(0);
   const router: AppRouterInstance = useRouter();
+
+  // Efecto para el contador de bloqueo
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isBlocked && blockTime > 0) {
+      interval = setInterval(() => {
+        setBlockTime((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsBlocked(false);
+            setLoginAttempts(0);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isBlocked, blockTime]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,6 +75,13 @@ export default function SigninForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (isBlocked) {
+      toast.error(
+        `Cuenta bloqueada temporalmente. Espere ${blockTime} segundos.`,
+      );
+      return;
+    }
+
     const errors = validatePassword(formData.password);
     if (errors.length > 0) {
       errors.forEach((error) => toast.error(error));
@@ -57,6 +91,9 @@ export default function SigninForm({
     try {
       setAppStatus("loading");
       const { token, expiration } = await handleLogin(formData);
+
+      // Resetear intentos si el login es exitoso
+      setLoginAttempts(0);
       setExpiration(expiration);
       onQrTokenChange(token);
       setAppStatus("validate");
@@ -64,11 +101,26 @@ export default function SigninForm({
       setTimeout(() => validateLogin(token, router, setAppStatus), 1000);
     } catch (error) {
       setAppStatus("error");
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Error al enviar el formulario",
-      );
+
+      // Incrementar intentos fallidos
+      const newAttempts = loginAttempts + 1;
+      setLoginAttempts(newAttempts);
+
+      if (newAttempts >= MAX_ATTEMPTS) {
+        // Bloquear después de MAX_ATTEMPTS intentos fallidos
+        setIsBlocked(true);
+        setBlockTime(Math.floor(BLOCK_TIME / 1000)); // Convertir a segundos
+
+        toast.warning(
+          `Demasiados intentos fallidos. Cuenta bloqueada por 5 minutos.`,
+        );
+      } else {
+        toast.error(
+          error instanceof Error
+            ? `${error.message} (Intentos restantes: ${MAX_ATTEMPTS - newAttempts})`
+            : `Error al enviar el formulario (Intentos restantes: ${MAX_ATTEMPTS - newAttempts})`,
+        );
+      }
     }
   };
 
@@ -80,7 +132,9 @@ export default function SigninForm({
         type="email"
         value={formData.email}
         onChange={handleInputChange}
-        disabled={appStatus === "loading" || appStatus === "validate"}
+        disabled={
+          appStatus === "loading" || appStatus === "validate" || isBlocked
+        }
         icon="email"
       />
       <PasswordInput
@@ -88,11 +142,20 @@ export default function SigninForm({
         name="password"
         value={formData.password}
         onChange={handleInputChange}
-        disabled={appStatus === "loading" || appStatus === "validate"}
+        disabled={
+          appStatus === "loading" || appStatus === "validate" || isBlocked
+        }
       />
+
+      {isBlocked && (
+        <div className="mb-2 text-sm text-red-600">
+          Cuenta bloqueada. Tiempo restante: {blockTime} segundos
+        </div>
+      )}
+
       <div className="mb-6 flex items-center justify-between gap-2 py-2">
         <Link isBlock showAnchorIcon color="primary" href="/auth/pass">
-          Te has olvidado de la contraseña?
+          ¿Olvidaste tu contraseña?
         </Link>
       </div>
       <div className="mb-4">
@@ -102,14 +165,17 @@ export default function SigninForm({
           isDisabled={
             appStatus === "loading" ||
             appStatus === "validate" ||
-            passwordErrors.length > 0
+            passwordErrors.length > 0 ||
+            isBlocked
           }
         >
           {appStatus === "loading"
             ? "Enviando..."
             : appStatus === "validate"
               ? "Enviado"
-              : "Inicia Sesión"}
+              : isBlocked
+                ? "Cuenta Bloqueada"
+                : "Iniciar Sesión"}
         </Button>
       </div>
     </form>
