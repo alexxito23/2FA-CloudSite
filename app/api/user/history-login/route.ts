@@ -1,7 +1,7 @@
 export async function GET(req: Request) {
   try {
     const res = await fetch(
-      `${process.env.FLIGHT_API}/api/content/connection-logs`,
+      `${process.env.FLIGHT_API}/content/connection-logs`,
       {
         method: "GET",
         credentials: "include",

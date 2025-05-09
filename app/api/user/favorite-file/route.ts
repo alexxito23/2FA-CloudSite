@@ -2,18 +2,15 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const res = await fetch(
-      `${process.env.FLIGHT_API}/api/content/favorite-file`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: req.headers.get("cookie") || "",
-        },
-        body: JSON.stringify(body),
+    const res = await fetch(`${process.env.FLIGHT_API}/content/favorite-file`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: req.headers.get("cookie") || "",
       },
-    );
+      body: JSON.stringify(body),
+    });
 
     const data = await res.json();
 

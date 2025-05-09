@@ -1,7 +1,7 @@
 export async function POST(req: Request) {
   const { nombre, directorio } = await req.json();
 
-  const res = await fetch(`${process.env.FLIGHT_API}/api/content/download`, {
+  const res = await fetch(`${process.env.FLIGHT_API}/content/download`, {
     method: "POST",
     headers: {
       Cookie: req.headers.get("cookie") || "",

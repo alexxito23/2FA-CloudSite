@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${process.env.FLIGHT_API}/api/content/shared`, {
+    const res = await fetch(`${process.env.FLIGHT_API}/content/shared`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

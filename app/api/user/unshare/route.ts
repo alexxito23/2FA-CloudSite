@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   const cookieValue = req.cookies.get("auth")?.value;
 
   try {
-    const res = await fetch(`${process.env.FLIGHT_API}/api/content/unshared`, {
+    const res = await fetch(`${process.env.FLIGHT_API}/content/unshared`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

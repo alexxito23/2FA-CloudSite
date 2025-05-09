@@ -1,15 +1,12 @@
 export async function GET(req: Request) {
   try {
-    const res = await fetch(
-      `${process.env.FLIGHT_API}/api/content/latest-files`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Cookie: req.headers.get("cookie") || "",
-        },
+    const res = await fetch(`${process.env.FLIGHT_API}/content/latest-files`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: req.headers.get("cookie") || "",
       },
-    );
+    });
 
     const data = await res.json();
 

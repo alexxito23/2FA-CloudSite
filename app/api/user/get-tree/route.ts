@@ -1,6 +1,6 @@
 export async function GET(req: Request) {
   try {
-    const res = await fetch(`${process.env.FLIGHT_API}/api/content/get-tree`, {
+    const res = await fetch(`${process.env.FLIGHT_API}/content/get-tree`, {
       method: "GET",
       credentials: "include",
       headers: {

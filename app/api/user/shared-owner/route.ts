@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const response = await fetch(
-      `${process.env.FLIGHT_API}/api/content/shared-owner`,
+      `${process.env.FLIGHT_API}/content/shared-owner`,
       {
         method: "GET",
         headers: {

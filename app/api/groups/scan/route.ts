@@ -4,17 +4,14 @@ export async function GET(req: NextRequest) {
   const cookie = req.cookies.get("auth")?.value;
 
   try {
-    const response = await fetch(
-      `${process.env.FLIGHT_API}/api/content/groups`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `auth=${cookie}`, // Envía las cookies al backend PHP
-        },
-        credentials: "include",
+    const response = await fetch(`${process.env.FLIGHT_API}/content/groups`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `auth=${cookie}`, // Envía las cookies al backend PHP
       },
-    );
+      credentials: "include",
+    });
 
     const data = await response.json();
     if (response.status === 401) {

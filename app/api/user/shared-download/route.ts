@@ -1,16 +1,13 @@
 export async function POST(req: Request) {
   const { nombre, directoryName, email } = await req.json();
 
-  const res = await fetch(
-    `${process.env.FLIGHT_API}/api/content/shared-download`,
-    {
-      method: "POST",
-      headers: {
-        Cookie: req.headers.get("cookie") || "",
-      },
-      body: new URLSearchParams({ nombre, directoryName, email }),
+  const res = await fetch(`${process.env.FLIGHT_API}/content/shared-download`, {
+    method: "POST",
+    headers: {
+      Cookie: req.headers.get("cookie") || "",
     },
-  );
+    body: new URLSearchParams({ nombre, directoryName, email }),
+  });
 
   if (!res.ok) {
     const error = await res.text();

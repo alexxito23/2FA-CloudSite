@@ -4,16 +4,13 @@ const POST = async (req: NextRequest) => {
   try {
     const formData = await req.json();
 
-    const response = await fetch(
-      `${process.env.FLIGHT_API}/api/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const response = await fetch(`${process.env.FLIGHT_API}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(formData),
+    });
 
     const data = await response.json();
 

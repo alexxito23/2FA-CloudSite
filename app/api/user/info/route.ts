@@ -12,7 +12,7 @@ const GET = async (req: NextRequest) => {
 
   try {
     const externalResponse = await fetch(
-      `${process.env.FLIGHT_API}/api/client/info`,
+      `${process.env.FLIGHT_API}/client/info`,
       {
         method: "GET",
         headers: {

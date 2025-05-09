@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       const options = {
         hostname: process.env.FLIGHT_API_DOMAIN,
         port: 80,
-        path: "/api/auth/check-login",
+        path: "/auth/check-login",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
