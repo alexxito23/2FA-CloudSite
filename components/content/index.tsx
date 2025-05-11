@@ -527,7 +527,7 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                 Seleccionar carpeta
               </NextUIButton>
             </label>
-            <span className="pl-4 text-white">
+            <span className="pl-4 text-gray-500 dark:text-white">
               {selectedFiles?.[0]?.webkitRelativePath.split("/")[0]}
             </span>
           </div>
@@ -547,7 +547,9 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                 Seleccionar archivos
               </NextUIButton>
             </label>
-            <span className="pl-4 text-white">{getFileLabel()}</span>
+            <span className="pl-4 text-gray-500 dark:text-white">
+              {getFileLabel()}
+            </span>
           </div>
         );
       case "deleteDir":
