@@ -89,7 +89,7 @@ const Header = (props: {
             <DropdownNotification />
           </ul>
           <Skeleton
-            className="w-32 rounded-lg"
+            className="w-60 rounded-lg"
             isLoaded={!loading}
             classNames={{ base: "dark:bg-gray-800" }}
           >

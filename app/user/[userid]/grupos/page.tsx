@@ -181,6 +181,13 @@ export default function App() {
   };
 
   const addEmail = () => {
+    const emailPattern = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/i;
+
+    if (!emailPattern.test(currentEmail.trim())) {
+      alert("El correo no es válido");
+      return;
+    }
+
     if (currentEmail && !emails.includes(currentEmail)) {
       setEmails([...emails, currentEmail]);
       setCurrentEmail("");
@@ -243,7 +250,13 @@ export default function App() {
           </ModalBody>
           <ModalFooter>
             <Button onClick={onCreateModalClose}>Cancelar</Button>
-            <Button color="primary" onClick={handleCreateGroup}>
+            <Button
+              color="primary"
+              onClick={handleCreateGroup}
+              isDisabled={
+                emails.length === 0 || !newGroupName || !newGroupDescription
+              }
+            >
               Crear
             </Button>
           </ModalFooter>
