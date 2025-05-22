@@ -89,6 +89,8 @@ export default function SignupForm({
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
         icon="name"
+        minLength={1}
+        maxLength={40}
       />
       <FormInput
         label="Apellidos"
@@ -97,6 +99,8 @@ export default function SignupForm({
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
         icon="name"
+        minLength={1}
+        maxLength={40}
       />
       <FormInput
         label="Email"
@@ -106,6 +110,9 @@ export default function SignupForm({
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
         icon="email"
+        minLength={1}
+        maxLength={40}
+        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
       />
       <PasswordInput
         label="Contraseña"

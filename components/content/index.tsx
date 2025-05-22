@@ -509,6 +509,8 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
             className="mt-2"
             value={newDirName}
             onChange={(e) => setNewDirName(e.target.value)}
+            minLength={1}
+            maxLength={40}
           />
         );
       case "uploadDir":
@@ -520,7 +522,34 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
               directory=""
               className="hidden"
               id="upload-dir"
-              onChange={(e) => setSelectedFiles(e.target.files)}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files) return;
+
+                const folderName = files[0]?.webkitRelativePath.split("/")[0];
+                const fileArray = Array.from(files);
+
+                // Verificamos nombre de la carpeta
+                const folderNameValid =
+                  folderName &&
+                  folderName.length >= 1 &&
+                  folderName.length <= 40;
+
+                // Verificamos cada archivo dentro del directorio
+                const allFileNamesValid = fileArray.every((file) => {
+                  const fileName = file.name;
+                  return fileName.length > 1 && fileName.length < 40;
+                });
+
+                if (folderNameValid && allFileNamesValid) {
+                  setSelectedFiles(files);
+                } else {
+                  alert(
+                    "El nombre de la carpeta y todos los archivos deben tener entre 1 y 40 caracteres.",
+                  );
+                  e.target.value = ""; // limpia selección inválida
+                }
+              }}
             />
             <label htmlFor="upload-dir">
               <NextUIButton as="span" color="primary" variant="flat">
@@ -540,7 +569,24 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
               multiple
               className="hidden"
               id="upload-file"
-              onChange={(e) => setSelectedFiles(e.target.files)}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files) return;
+
+                const fileArray = Array.from(files);
+                const allNamesValid = fileArray.every(
+                  (file) => file.name.length >= 1 && file.name.length <= 40,
+                );
+
+                if (allNamesValid) {
+                  setSelectedFiles(files);
+                } else {
+                  alert(
+                    "Todos los archivos deben tener nombres entre 1 y 40 caracteres.",
+                  );
+                  e.target.value = "";
+                }
+              }}
             />
             <label htmlFor="upload-file">
               <NextUIButton as="span" color="primary" variant="flat">
@@ -585,6 +631,8 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                     setShareList(updated);
                   }}
                   className="flex-1"
+                  minLength={1}
+                  maxLength={40}
                 />
                 <Select
                   defaultSelectedKeys={[item.permiso]}

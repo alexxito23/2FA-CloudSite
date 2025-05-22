@@ -200,6 +200,8 @@ export default function App() {
               value={newGroupName}
               onValueChange={setNewGroupName}
               size="sm"
+              minLength={1}
+              maxLength={40}
             />
             <Textarea
               label="Descripción"
@@ -214,6 +216,9 @@ export default function App() {
                 onValueChange={setCurrentEmail}
                 onKeyDown={(e) => e.key === "Enter" && addEmail()}
                 size="sm"
+                minLength={1}
+                maxLength={40}
+                pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
               />
               <Button onClick={addEmail} startContent={<MdAdd />}>
                 Añadir correo

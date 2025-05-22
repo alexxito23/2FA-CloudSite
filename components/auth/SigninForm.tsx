@@ -77,7 +77,7 @@ export default function SigninForm({
 
     if (isBlocked) {
       toast.error(
-        `Cuenta bloqueada temporalmente. Espere ${blockTime} segundos.`,
+        `Inicio de sesión bloqueado temporalmente. Espere ${blockTime} segundos.`,
       );
       return;
     }
@@ -112,7 +112,7 @@ export default function SigninForm({
         setBlockTime(Math.floor(BLOCK_TIME / 1000)); // Convertir a segundos
 
         toast.warning(
-          `Demasiados intentos fallidos. Cuenta bloqueada por 5 minutos.`,
+          `Demasiados intentos fallidos. Inicio de sesión bloqueado por 5 minutos.`,
         );
       } else {
         toast.error(
@@ -136,6 +136,9 @@ export default function SigninForm({
           appStatus === "loading" || appStatus === "validate" || isBlocked
         }
         icon="email"
+        minLength={1}
+        maxLength={40}
+        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
       />
       <PasswordInput
         label="Contraseña"
@@ -149,7 +152,7 @@ export default function SigninForm({
 
       {isBlocked && (
         <div className="mb-2 text-sm text-red-600">
-          Cuenta bloqueada. Tiempo restante: {blockTime} segundos
+          Inicio de sesión bloqueado. Tiempo restante: {blockTime} segundos
         </div>
       )}
 

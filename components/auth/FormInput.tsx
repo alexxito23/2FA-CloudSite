@@ -10,6 +10,9 @@ interface FormInputProps {
   disabled: boolean;
   type?: string;
   icon: "email" | "name";
+  minLength: number;
+  maxLength: number;
+  pattern?: string;
 }
 
 export default function FormInput({
@@ -20,6 +23,9 @@ export default function FormInput({
   disabled,
   type = "text",
   icon,
+  minLength,
+  maxLength,
+  pattern,
 }: FormInputProps) {
   const IconComponent =
     icon === "email" ? MdOutlineEmail : MdDriveFileRenameOutline;
@@ -42,6 +48,9 @@ export default function FormInput({
       value={value}
       onChange={onChange}
       isDisabled={disabled}
+      minLength={minLength}
+      maxLength={maxLength}
+      pattern={pattern}
     />
   );
 }

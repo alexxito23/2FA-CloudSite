@@ -812,6 +812,8 @@ export default function Compartido() {
                                 setShareList(updated);
                               }}
                               className="flex-1"
+                              minLength={1}
+                              maxLength={40}
                             />
                             <Select
                               defaultSelectedKeys={[item.permiso]}
