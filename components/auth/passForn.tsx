@@ -95,6 +95,9 @@ export default function PassForm({
         onChange={handleInputChange}
         disabled={appStatus === "loading" || appStatus === "validate"}
         icon="email"
+        minLength={1}
+        maxLength={40}
+        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
       />
       {appStatus === "error" ||
         (appStatus === "pass" && (
