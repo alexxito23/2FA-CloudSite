@@ -538,14 +538,14 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
                 // Verificamos cada archivo dentro del directorio
                 const allFileNamesValid = fileArray.every((file) => {
                   const fileName = file.name;
-                  return fileName.length > 1 && fileName.length < 40;
+                  return fileName.length >= 1 && fileName.length <= 36;
                 });
 
                 if (folderNameValid && allFileNamesValid) {
                   setSelectedFiles(files);
                 } else {
                   alert(
-                    "El nombre de la carpeta y todos los archivos deben tener entre 1 y 40 caracteres.",
+                    "El nombre de la carpeta y todos los archivos deben tener entre 1 y 35 caracteres.",
                   );
                   e.target.value = ""; // limpia selección inválida
                 }
@@ -575,14 +575,14 @@ const FileContent = ({ cookie, directorio }: FileContentProps) => {
 
                 const fileArray = Array.from(files);
                 const allNamesValid = fileArray.every(
-                  (file) => file.name.length >= 1 && file.name.length <= 40,
+                  (file) => file.name.length >= 1 && file.name.length <= 36,
                 );
 
                 if (allNamesValid) {
                   setSelectedFiles(files);
                 } else {
                   alert(
-                    "Todos los archivos deben tener nombres entre 1 y 40 caracteres.",
+                    "Todos los archivos deben tener nombres entre 1 y 35 caracteres.",
                   );
                   e.target.value = "";
                 }
